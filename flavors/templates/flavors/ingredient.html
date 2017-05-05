@@ -1,10 +1,15 @@
-{% if ingredient %}
-  <h1>{{ ingredient }}</h1>
-  <ul>
-      {% for taste in ingredient.tastes.all %}
-        <li>{{ taste.mouth_taste }}</li>
-      {% endfor %}
-  </ul>
-{% else %}
-  <h1>That ingredient isn't in our records. You can submit it for us to add.</h1>
+<h1>{{ altName.ingredient.listed_name|lower|capfirst }}</h1>
+
+{% if altName.name != altName.ingredient.listed_name %}
+  <h5>Redirected from {{ altName.name|capfirst }}</h5>
 {% endif %}
+
+{% if altName.ingredient.umbrella_cat %}
+  <h4>See also: <a href="{% url 'flavors:pairings' altName.ingredient.umbrella_cat %}">{{ altName.ingredient.umbrella_cat|capfirst }}</a> </h4>
+{% endif %}
+
+<ul>
+    {% for taste in altName.ingredient.tastes.all %}
+      <li>{{ taste.mouth_taste }}</li>
+    {% endfor %}
+</ul>
