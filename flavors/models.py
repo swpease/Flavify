@@ -2,7 +2,17 @@ from django.db import models
 
 # Create your models here.
 
-"""Current logic for all ingredients / names: keep plurality as singular (e.g. "mushroom", not "mushrooms")."""
+"""Current logic for all ingredients / names: keep plurality as singular (e.g. "mushroom", not "mushrooms").
+
+   Notes on order of creation:
+     - Must create an Ingredient instance before a dependent AltName instance.
+     - Must create an Ingredient instance without any tastes before tastes can be assigned.
+       Tastes must be derived from the existing Tastes:
+         x = Ingredient.objects.create(listed_name="x", umbrella_cat="")
+         tastes = Taste.objects.all()
+         x.tastes.add(tastes[0], tastes[3])
+       To view x's tastes, use x.tastes.all()
+"""
 class Ingredient(models.Model):
     """
     RELATIONSHIPS: Taste - many-to-many
@@ -19,7 +29,8 @@ class Ingredient(models.Model):
     tastes = models.ManyToManyField('Taste')
 
     def __str__(self):
-        return '{} (also under: {})'.format(self.listed_name, self.umbrella_cat)
+        # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
+        return '{}. Under {}.'.format(self.listed_name, self.umbrella_cat)
 
 
 class AltName(models.Model):
@@ -31,7 +42,7 @@ class AltName(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '{} listed as {}'.format(self.name, self.ingredient)
+        return '{}: Listed as {}'.format(self.name, self.ingredient)
 
 
 class Taste(models.Model):
@@ -40,14 +51,14 @@ class Taste(models.Model):
     mouth_taste: A collection of words that one can use to describe flavor.
     """
     TONGUE_MAP = (
-        ('Sweet', 'Sweet'),
-        ('Salty', 'Salty'),
-        ('Sour', 'Sour'),
-        ('Bitter', 'Bitter'),
-        ('Umami', 'Umami'),
-        ('Spicy', 'Spicy'),  # mustard
-        ('Numbing', 'Numbing'),  # Szechuan peppercorns
-        ('Cooling', 'Cooling'),  # mint
+        ('sweet', 'Sweet'),
+        ('salty', 'Salty'),
+        ('sour', 'Sour'),
+        ('bitter', 'Bitter'),
+        ('umami', 'Umami'),
+        ('spicy', 'Spicy'),  # mustard
+        ('numbing', 'Numbing'),  # Szechuan peppercorns
+        ('cooling', 'Cooling'),  # mint
     )
 
     mouth_taste = models.CharField(max_length=20, choices=TONGUE_MAP)
