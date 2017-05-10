@@ -15,8 +15,9 @@ from django.db import models
 """
 class Ingredient(models.Model):
     """
-    RELATIONSHIPS: Taste - many-to-many
-                   AltName - one-to-many
+    RELATIONSHIPS: Taste - many-to-many, "forward"
+                   AltName - one-to-many, "backward"
+                   Combination – many-to-many, "backward"
     listed_name: Case-insensitive, and must be written in normal words (e.g: "morel mushroom", NOT "morel_mushroom").
                  Represents the title of a given ingredients page.
     umbrella_cat: Same restrictions as listed_name, PLUS it must itself be a listed_name.
@@ -26,7 +27,7 @@ class Ingredient(models.Model):
     """
     listed_name = models.CharField(max_length=50)
     umbrella_cat = models.CharField(max_length=30, blank=True)
-    tastes = models.ManyToManyField('Taste')
+    tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
 
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
@@ -47,21 +48,39 @@ class AltName(models.Model):
 
 class Taste(models.Model):
     """
-    RELATIONSHIPS: many-to-many with Ingredient.
+    RELATIONSHIPS: Ingredient – many-to-many, "backward"
     mouth_taste: A collection of words that one can use to describe flavor.
     """
     TONGUE_MAP = (
-        ('sweet', 'Sweet'),
-        ('salty', 'Salty'),
-        ('sour', 'Sour'),
-        ('bitter', 'Bitter'),
-        ('umami', 'Umami'),
-        ('spicy', 'Spicy'),  # mustard
-        ('numbing', 'Numbing'),  # Szechuan peppercorns
-        ('cooling', 'Cooling'),  # mint
+        ('sweet', 'sweet'),
+        ('salty', 'salty'),
+        ('sour', 'sour'),
+        ('bitter', 'bitter'),
+        ('umami', 'umami'),
+        ('spicy', 'spicy'),  # mustard
+        ('numbing', 'numbing'),  # Szechuan peppercorns
+        ('cooling', 'cooling'),  # mint
     )
 
     mouth_taste = models.CharField(max_length=20, choices=TONGUE_MAP)
 
     def __str__(self):
         return self.mouth_taste
+
+
+class Combination(models.Model):
+    """
+    RELATIONSHIPS: Ingredient – many-to-many, "forward"
+    tries: Number of users who have confirmed that they tried the combination
+    datetime_submitted: auto-generated upon Combination creation
+    submittor: user who submitted the Combination
+    """
+    tries = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
+    datetime_submitted = models.DateTimeField(auto_now_add=True)
+    submittor = models.CharField(max_length=100, default="admin")
+    ingredients = models.ManyToManyField(Ingredient)
+
+    def __str__(self):
+        return self.ingredients
