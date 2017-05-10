@@ -83,4 +83,4 @@ class Combination(models.Model):
     ingredients = models.ManyToManyField(Ingredient)
 
     def __str__(self):
-        return self.ingredients
+        return str(self.pk)  # Don't really have a better idea.

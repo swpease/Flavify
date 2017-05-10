@@ -1,15 +1,21 @@
-<h1>{{ altName.ingredient.listed_name|lower|capfirst }}</h1>
+<h1>{{ listing.listed_name|lower|capfirst }}</h1>
 
-{% if altName.name != altName.ingredient.listed_name %}
+{% if altName.name != listing.listed_name %}
   <h5>Redirected from {{ altName.name|capfirst }}</h5>
 {% endif %}
 
-{% if altName.ingredient.umbrella_cat %}
-  <h4>See also: <a href="{% url 'flavors:pairings' altName.ingredient.umbrella_cat %}">{{ altName.ingredient.umbrella_cat|capfirst }}</a> </h4>
+{% if listing.umbrella_cat %}
+  <h4>See also: <a href="{% url 'flavors:pairings' listing.umbrella_cat %}">{{ listing.umbrella_cat|capfirst }}</a> </h4>
 {% endif %}
 
 <ul>
-    {% for taste in altName.ingredient.tastes.all %}
+    {% for taste in listing.tastes.all %}
       <li>{{ taste.mouth_taste }}</li>
     {% endfor %}
+</ul>
+
+<ul>
+  {% for combo in combos %}
+    <li>{{ combo.ingredients.all }}</li>
+  {% endfor %}
 </ul>
