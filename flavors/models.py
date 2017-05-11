@@ -29,6 +29,10 @@ class Ingredient(models.Model):
     umbrella_cat = models.CharField(max_length=30, blank=True)
     tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
 
+    def save(self, *args, **kwargs):
+        super(Ingredient, self).save(*args, **kwargs)
+        AltName.objects.create(name=self.listed_name, ingredient=self)
+
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
         return '{}. Under {}.'.format(self.listed_name, self.umbrella_cat)
