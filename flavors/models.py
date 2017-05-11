@@ -25,17 +25,21 @@ class Ingredient(models.Model):
                     Example 1: listed_name = "Morel mushroom", umbrella_cat = "Mushroom"
                     Example 2: listed_name = "Szechuan peppercorn", umbrella_cat = ""
     """
-    listed_name = models.CharField(max_length=50)
+    listed_name = models.CharField(max_length=50, unique=True)
     umbrella_cat = models.CharField(max_length=30, blank=True)
     tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
 
     def save(self, *args, **kwargs):
+        """Auto-creates the reflexive AltName object."""
         super(Ingredient, self).save(*args, **kwargs)
         AltName.objects.create(name=self.listed_name, ingredient=self)
 
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
         return '{}. Under {}.'.format(self.listed_name, self.umbrella_cat)
+
+    class Meta:
+        ordering = ['listed_name']
 
 
 class AltName(models.Model):
@@ -86,5 +90,17 @@ class Combination(models.Model):
     submittor = models.CharField(max_length=100, default="admin")
     ingredients = models.ManyToManyField(Ingredient)
 
+    def already_exists(self):
+        ingredients = self.ingredients.all()  # The ingredients that we want to try saving. Is this sorted?
+        ingredients_comp = [str(i) for i in ingredients]
+        combos = ingredients[0].combination_set.all()
+        for combo in combos:
+            other_ingredients = combo.ingredients.all()
+            other_ingredients_comp = [str(i) for i in other_ingredients]
+            if ingredients_comp == other_ingredients_comp:
+                return True
+        return False
+
     def __str__(self):
-        return str(self.pk)  # Don't really have a better idea.
+        ingreds = [i.listed_name for i in self.ingredients.all()]
+        return " ".join(ingreds)
