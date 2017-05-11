@@ -16,6 +16,10 @@
 
 <ul>
   {% for combo in combos %}
-    <li>{{ combo.ingredients.all }}</li>
+    <li>
+      {% for ingredient in combo %}
+        {{ ingredient.listed_name }}
+      {% endfor %}
+    </li>
   {% endfor %}
 </ul>
