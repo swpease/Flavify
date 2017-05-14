@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit a New Flavor Combination</title>
+</head>
+<body>
+  <form action="{% url 'flavors:submit-combo' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" name="submit" value="Submit">
+  </form>
+</body>
+</html>

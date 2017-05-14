@@ -1,10 +1,23 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
 
 from .models import Ingredient, Taste, AltName
-
+from .forms import CombinationForm
 
 def index(request):
     pass
+
+
+def submit_combo(request):
+    if request.method == 'POST':
+        form = CombinationForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/ingredient/hazelnut')
+
+    else:
+        form = CombinationForm
+
+    return render(request, 'flavors/submit-combo.html', {'form': form})
 
 
 def pairings(request, ingredient):
