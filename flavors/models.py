@@ -37,7 +37,7 @@ class Ingredient(models.Model):
 
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
-        return '{}. Under {}.'.format(self.listed_name, self.umbrella_cat)
+        return self.listed_name
 
     class Meta:
         ordering = ['listed_name']
