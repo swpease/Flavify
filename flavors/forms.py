@@ -20,9 +20,8 @@ class CombinationForm(forms.Form):
 
     def clean_ingredients(self):
         ingredients = self.cleaned_data['ingredients']  # QuerySet of `Ingredient`s
-        first_ing = ingredients[0]
-        combos = first_ing.combination_set.all()
-        for combo in combos:
+        existing_combos = ingredients[0].combination_set.all()  # Doesn't matter which ingredient I look at.
+        for combo in existing_combos:
             ings = combo.ingredients.all()
             if list(ings) == list(ingredients):  # Will this be properly sorted, or should I just make it a set?
                 raise ValidationError("This combination has already been submitted!")
