@@ -91,17 +91,6 @@ class Combination(models.Model):
     submittor = models.CharField(max_length=100, default="admin")
     ingredients = models.ManyToManyField(Ingredient)
 
-    def already_exists(self):
-        ingredients = self.ingredients.all()  # The ingredients that we want to try saving. Is this sorted?
-        ingredients_comp = [str(i) for i in ingredients]
-        combos = ingredients[0].combination_set.all()
-        for combo in combos:
-            other_ingredients = combo.ingredients.all()
-            other_ingredients_comp = [str(i) for i in other_ingredients]
-            if ingredients_comp == other_ingredients_comp:
-                return True
-        return False
-
     def __str__(self):
         ingreds = [i.listed_name for i in self.ingredients.all()]
         return " ".join(ingreds)

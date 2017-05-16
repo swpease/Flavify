@@ -19,6 +19,8 @@ def submit_combo(request):
 
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
+def submit_ingredient(request):
+    pass
 
 def pairings(request, ingredient):
     """
