@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget, ModelSelect2Widget
 
 from .models import Ingredient, Combination
 
@@ -13,6 +14,8 @@ def validate_count(ingredients):
 
 class CombinationForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(),
+                                                 widget=Select2MultipleWidget,
+                                                 required=True,
                                                  to_field_name="listed_name",
                                                  label="New Combination",
                                                  help_text="Select from two to ten ingredients that you think taste good together.",

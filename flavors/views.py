@@ -12,10 +12,11 @@ def submit_combo(request):
     if request.method == 'POST':
         form = CombinationForm(request.POST)
         if form.is_valid():
+            # TODO actually put the info in the db.
             return HttpResponseRedirect('/ingredient/hazelnut')
 
     else:
-        form = CombinationForm
+        form = CombinationForm  # Do not need to instantiate apparently?
 
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
