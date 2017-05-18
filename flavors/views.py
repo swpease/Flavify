@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.conf import settings
 
-from .models import Ingredient, Taste, AltName
+from .models import Ingredient, Taste, AltName, Combination
 from .forms import CombinationForm
 
 def index(request):
@@ -32,10 +32,15 @@ def submit_combo(request):
             ''' End reCAPTCHA validation '''
 
             if result['success']:
+                # If I had a ModelForm, I could just use form.save()
+                new_combo = Combination()
+                new_combo.save()
+                for ing in form.cleaned_data['ingredients']:
+                    new_combo.ingredients.add(ing)
                 return HttpResponseRedirect('/ingredient/shrimp')
-
-            # TODO actually put the info in the db.
-            return HttpResponseRedirect('/ingredient/hazelnut')
+            else:
+                return HttpResponseRedirect('/ingredient/hazelnut')
+            # TODO... decide on redirects.
 
     else:
         form = CombinationForm()
