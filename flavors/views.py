@@ -17,6 +17,7 @@ def submit_combo(request):
         form = CombinationForm(request.POST)
         if form.is_valid():
 
+            # Source: https://simpleisbetterthancomplex.com/tutorial/2017/02/21/how-to-add-recaptcha-to-django-site.html
             ''' Begin reCAPTCHA validation '''
             recaptcha_response = request.POST.get('g-recaptcha-response')
             url = 'https://www.google.com/recaptcha/api/siteverify'
