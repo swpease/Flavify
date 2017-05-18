@@ -17,7 +17,7 @@
     {{ form }}
     <input type="submit" name="submit" value="Submit">
   </form>
-  <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="{% static 'flavors/jquery-3.2.1.js' %}"></script>
   <script type="text/javascript">
     window.onerror = function (msg) {
       $("body").attr("JSError", msg);
