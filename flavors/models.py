@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
@@ -33,7 +34,10 @@ class Ingredient(models.Model):
     def save(self, *args, **kwargs):
         """Auto-creates the reflexive AltName object."""
         super(Ingredient, self).save(*args, **kwargs)
-        AltName.objects.create(name=self.listed_name, ingredient=self)
+        try:
+            AltName.objects.get(name=self.listed_name)
+        except ObjectDoesNotExist:
+            AltName.objects.create(name=self.listed_name, ingredient=self)
 
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."

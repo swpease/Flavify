@@ -1,5 +1,9 @@
+import json
+import urllib
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 from .models import Ingredient, Taste, AltName
 from .forms import CombinationForm
@@ -12,11 +16,28 @@ def submit_combo(request):
     if request.method == 'POST':
         form = CombinationForm(request.POST)
         if form.is_valid():
+
+            ''' Begin reCAPTCHA validation '''
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req = urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            ''' End reCAPTCHA validation '''
+
+            if result['success']:
+                return HttpResponseRedirect('/ingredient/shrimp')
+
             # TODO actually put the info in the db.
             return HttpResponseRedirect('/ingredient/hazelnut')
 
     else:
-        form = CombinationForm  # Do not need to instantiate apparently?
+        form = CombinationForm()
 
     return render(request, 'flavors/submit-combo.html', {'form': form})
 

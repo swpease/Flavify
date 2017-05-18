@@ -30,6 +30,7 @@ def get_env_variable(var_name):
 
 SECRET_KEY = get_env_variable('SECRET_KEY')
 
+GOOGLE_RECAPTCHA_SECRET_KEY = get_env_variable('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 ALLOWED_HOSTS = []
 
