@@ -1,8 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django_select2.forms import ModelSelect2MultipleWidget, Select2MultipleWidget, Select2Widget, ModelSelect2Widget
 
-from .models import Ingredient, Combination
+from django_select2.forms import Select2MultipleWidget
+
+from .models import Ingredient, Combination, IngredientSubmission
 
 
 def validate_count(ingredients):
@@ -30,3 +31,12 @@ class CombinationForm(forms.Form):
                 raise ValidationError("This combination has already been submitted!")
 
         return ingredients
+
+
+class IngredientSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = IngredientSubmission
+        fields = ['submission', 'submittor']
+        widgets = {
+            'submittor': forms.HiddenInput()
+        }
