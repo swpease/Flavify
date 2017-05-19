@@ -1,7 +1,11 @@
+import json
+import urllib
+
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
-from .models import Ingredient, Taste, AltName
+from .models import Ingredient, Taste, AltName, Combination
 from .forms import CombinationForm
 
 def index(request):
@@ -12,10 +16,34 @@ def submit_combo(request):
     if request.method == 'POST':
         form = CombinationForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/ingredient/hazelnut')
+
+            # Source: https://simpleisbetterthancomplex.com/tutorial/2017/02/21/how-to-add-recaptcha-to-django-site.html
+            ''' Begin reCAPTCHA validation '''
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req = urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            ''' End reCAPTCHA validation '''
+
+            if result['success']:
+                # If I had a ModelForm, I could just use form.save()
+                new_combo = Combination()
+                new_combo.save()
+                for ing in form.cleaned_data['ingredients']:
+                    new_combo.ingredients.add(ing)
+                return HttpResponseRedirect('/ingredient/shrimp')
+            else:
+                return HttpResponseRedirect('/ingredient/hazelnut')
+            # TODO... decide on redirects.
 
     else:
-        form = CombinationForm
+        form = CombinationForm()
 
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
