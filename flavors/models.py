@@ -107,4 +107,4 @@ class IngredientSubmission(models.Model):
                                   verbose_name='New Ingredient Submission',
                                   help_text='Submit a new ingredient to be able to pick for new flavor combinations.')
     datetime_submitted = models.DateTimeField(auto_now_add=True)
-    submittor = models.CharField(max_length=100)
+    submittor = models.CharField(max_length=100)  # Do I want to set editable=False?
