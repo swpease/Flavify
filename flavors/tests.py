@@ -96,9 +96,14 @@ class CombinationsTests(TestCase):
         response = self.client.get('/ingredient/submit-combo/')
         self.assertEqual(response.status_code, 200)
 
-    if __name__ == '__main__':
-        def test_submit_combo_view_bad_submission(self):
-            response = self.client.post('/ingredient/submit-combo/', {'ingredients': (self.rand_ingred, )})
-            self.assertContains(response, "Your submission must contain at least two ingredients")
+    def test_submit_combo_view_bad_submission(self):
+        response = self.client.post('/ingredient/submit-combo/', {'ingredients': (self.rand_ingred, )})
+        self.assertContains(response, "Your submission must contain at least two ingredients")
 
         # TODO... for when the form submitted is valid
+
+
+class SubmitIngredientTests(TestCase):
+    def test_submit_ingredient_view_unvisited(self):
+        response = self.client.get('/ingredient/submit-ingredient/')
+        self.assertEqual(response.status_code, 200)
