@@ -9,24 +9,24 @@ from .models import Ingredient, Taste, AltName, Combination, IngredientSubmissio
 from .forms import CombinationForm, IngredientSubmissionForm
 
 
-# def recaptcha_validation(request):
-#     """
-#     source: https://simpleisbetterthancomplex.com/tutorial/2017/02/21/how-to-add-recaptcha-to-django-site.html
-#     :param request: Django request object.
-#     :return: dict(?). Result of recaptcha validation.
-#     """
-#     recaptcha_response = request.POST.get('g-recaptcha-response')
-#     url = 'https://www.google.com/recaptcha/api/siteverify'
-#     values = {
-#         'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-#         'response': recaptcha_response
-#     }
-#     data = urllib.parse.urlencode(values).encode()
-#     req = urllib.request.Request(url, data=data)
-#     response = urllib.request.urlopen(req)
-#     result = json.loads(response.read().decode())
-#
-#     return result
+def recaptcha_validation(request):
+    """
+    source: https://simpleisbetterthancomplex.com/tutorial/2017/02/21/how-to-add-recaptcha-to-django-site.html
+    :param request: Django request object.
+    :return: dict(?). Result of recaptcha validation.
+    """
+    recaptcha_response = request.POST.get('g-recaptcha-response')
+    url = 'https://www.google.com/recaptcha/api/siteverify'
+    values = {
+        'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+        'response': recaptcha_response
+    }
+    data = urllib.parse.urlencode(values).encode()
+    req = urllib.request.Request(url, data=data)
+    response = urllib.request.urlopen(req)
+    result = json.loads(response.read().decode())
+
+    return result
 
 def index(request):
     pass
