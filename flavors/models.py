@@ -1,8 +1,6 @@
 from django.db import models
-from django.forms import ModelForm
 from django.core.exceptions import ObjectDoesNotExist
 
-# Create your models here.
 
 """Current logic for all ingredients / names: keep plurality as singular (e.g. "mushroom", not "mushrooms").
 
@@ -27,7 +25,7 @@ class Ingredient(models.Model):
                     Example 1: listed_name = "Morel mushroom", umbrella_cat = "Mushroom"
                     Example 2: listed_name = "Szechuan peppercorn", umbrella_cat = ""
     """
-    listed_name = models.CharField(max_length=50, unique=True)
+    listed_name = models.CharField(max_length=50, unique=True)  # Do I want this to be the PK?
     umbrella_cat = models.CharField(max_length=30, blank=True)
     tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
 
@@ -96,5 +94,17 @@ class Combination(models.Model):
     ingredients = models.ManyToManyField(Ingredient)
 
     def __str__(self):
-        ingreds = [i.listed_name for i in self.ingredients.all()]
-        return " ".join(ingreds)
+        ings = [i.listed_name for i in self.ingredients.all()]
+        return " ".join(ings)
+
+
+class IngredientSubmission(models.Model):
+    """
+    Standalone table that houses user-submitted ingredients (currently not in Ingredients table)
+    for manual review.
+    """
+    submission = models.CharField(max_length=100,
+                                  verbose_name='New Ingredient Submission',
+                                  help_text='Submit a new ingredient to be able to pick for new flavor combinations.')
+    datetime_submitted = models.DateTimeField(auto_now_add=True)
+    submittor = models.CharField(max_length=100)
