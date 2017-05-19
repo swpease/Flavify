@@ -55,21 +55,21 @@ def submit_combo(request):
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
 def submit_ingredient(request):
-    # if request.method == 'POST':
-    #     form = IngredientSubmissionForm(request.POST)
-    #     if form.is_valid():
-    #         result = recaptcha_validation(request)
-    #         if result['success']:
-    #             form.save()
-    #             return HttpResponseRedirect('/ingredient/shrimp')
-    #         else:
-    #             return HttpResponseRedirect('/ingredient/hazelnut')
-    #         # TODO... decide on redirects.
-    #
-    # else:
-    #     form = IngredientSubmissionForm()
+    if request.method == 'POST':
+        form = IngredientSubmissionForm(request.POST)
+        if form.is_valid():
+            result = recaptcha_validation(request)
+            if result['success']:
+                form.save()
+                return HttpResponseRedirect('/ingredient/shrimp')
+            else:
+                return HttpResponseRedirect('/ingredient/hazelnut')
+            # TODO... decide on redirects.
 
-    # return render(request, 'flavors/submit-ingredient.html', {'form': form})
+    else:
+        form = IngredientSubmissionForm()
+
+    return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
 def pairings(request, ingredient):
     """
