@@ -39,12 +39,14 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'flavors.apps.FlavorsConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     'django_select2',
 ]
@@ -78,6 +80,11 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'flavify.wsgi.application'
+
+
+# For sites framework
+
+SITE_ID = 1
 
 
 # Database
