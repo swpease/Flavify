@@ -92,6 +92,9 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+# TODO... change this to be just '/'
+LOGIN_REDIRECT_URL = '/ingredient/'
+
 WSGI_APPLICATION = 'flavify.wsgi.application'
 
 

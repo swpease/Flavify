@@ -2,7 +2,7 @@ import json
 import urllib
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
 from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission
@@ -29,7 +29,7 @@ def recaptcha_validation(request):
     return result
 
 def index(request):
-    pass
+    return HttpResponse("This is the index page for now.")
 
 
 def submit_combo(request):
