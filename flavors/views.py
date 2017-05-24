@@ -1,8 +1,7 @@
-import json
-import urllib
+import requests
 
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
 from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission
@@ -16,20 +15,16 @@ def recaptcha_validation(request):
     :return: dict(?). Result of recaptcha validation.
     """
     recaptcha_response = request.POST.get('g-recaptcha-response')
-    url = 'https://www.google.com/recaptcha/api/siteverify'
-    values = {
+    data = {
         'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
         'response': recaptcha_response
     }
-    data = urllib.parse.urlencode(values).encode()
-    req = urllib.request.Request(url, data=data)
-    response = urllib.request.urlopen(req)
-    result = json.loads(response.read().decode())
-
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+    result = r.json()
     return result
 
 def index(request):
-    pass
+    return HttpResponse("This is the index page for now.")
 
 
 def submit_combo(request):

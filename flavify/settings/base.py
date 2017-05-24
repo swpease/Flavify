@@ -39,14 +39,22 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'flavors.apps.FlavorsConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     'django_select2',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +85,28 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# TODO... change this to be just '/'
+LOGIN_REDIRECT_URL = '/ingredient/'
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+# Ref: https://docs.djangoproject.com/en/1.11/topics/email/
+# TODO... setup email system
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 WSGI_APPLICATION = 'flavify.wsgi.application'
+
+
+# For sites framework
+
+SITE_ID = 1
 
 
 # Database
