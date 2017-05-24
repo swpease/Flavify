@@ -94,6 +94,12 @@ AUTHENTICATION_BACKENDS = (
 
 # TODO... change this to be just '/'
 LOGIN_REDIRECT_URL = '/ingredient/'
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+# Ref: https://docs.djangoproject.com/en/1.11/topics/email/
+# TODO... setup email system
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 WSGI_APPLICATION = 'flavify.wsgi.application'
 
