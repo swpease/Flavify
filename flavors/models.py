@@ -1,6 +1,5 @@
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
-
+from django.contrib.auth.models import User
 
 """Current logic for all ingredients / names: keep plurality as singular (e.g. "mushroom", not "mushrooms").
 
@@ -25,17 +24,16 @@ class Ingredient(models.Model):
                     Example 1: listed_name = "Morel mushroom", umbrella_cat = "Mushroom"
                     Example 2: listed_name = "Szechuan peppercorn", umbrella_cat = ""
     """
+    tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
+
     listed_name = models.CharField(max_length=50, unique=True)  # Do I want this to be the PK?
     umbrella_cat = models.CharField(max_length=30, blank=True)
-    tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
 
     def save(self, *args, **kwargs):
         """Auto-creates the reflexive AltName object."""
         super(Ingredient, self).save(*args, **kwargs)
-        try:
-            AltName.objects.get(name=self.listed_name)
-        except ObjectDoesNotExist:
-            AltName.objects.create(name=self.listed_name, ingredient=self)
+        # Does not protect against manually entering the same altName multiple times
+        AltName.objects.get_or_create(name=self.listed_name, ingredient=self)
 
     def __str__(self):
         # umb = ", under " + self.umbrella_cat if self.umbrella_cat else ". No umbrella category."
@@ -50,8 +48,9 @@ class AltName(models.Model):
     name: Case-insensitive, and must be written in normal words.
           Represents a valid name for an ingredient. (e.g.: "filbert" : "hazelnut" and "hazelnut" : "hazelnut")
     """
-    name = models.CharField(max_length=50)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+
+    name = models.CharField(max_length=50)
 
     def __str__(self):
         return '{}: Listed as {}'.format(self.name, self.ingredient)
@@ -86,12 +85,15 @@ class Combination(models.Model):
     datetime_submitted: auto-generated upon Combination creation
     submittor: user who submitted the Combination
     """
+    ingredients = models.ManyToManyField(Ingredient)
+    # Backwards, but avoids needing to customize the User model or create an unnecessary UserProfile model.
+    users = models.ManyToManyField(User, through='UserComboData')
+
     tries = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     datetime_submitted = models.DateTimeField(auto_now_add=True)
     submittor = models.CharField(max_length=100, default="admin")
-    ingredients = models.ManyToManyField(Ingredient)
 
     def __str__(self):
         ings = [i.listed_name for i in self.ingredients.all()]
@@ -107,4 +109,28 @@ class IngredientSubmission(models.Model):
                                   verbose_name='New Ingredient Submission',
                                   help_text='Submit a new ingredient to be able to pick for new flavor combinations.')
     datetime_submitted = models.DateTimeField(auto_now_add=True)
+    # TODO... get the username in the submission. Need a RequestContext.
     submittor = models.CharField(max_length=100)  # Do I want to set editable=False?
+
+
+class UserComboData(models.Model):
+    """
+    Extra fields for the User-Combo M2M relationship.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    combination = models.ForeignKey(Combination, on_delete=models.CASCADE)
+
+    # Might want to change the widget from a checkbox to allow keyboard navigation
+    like = models.BooleanField(default=False)
+    dislike = models.BooleanField(default=False)
+    favorite = models.BooleanField(default=False)
+    note = models.CharField(max_length=500, blank=True)
+    # cooking_method = models.CharField(max_length=20, choices="TBD")
+    # cuisine = models.CharField(max_length=50, choices="TBD")
+
+
+
+""" Do I have any use for one of these?
+class UserProfile(models.Model):
+    pass
+"""

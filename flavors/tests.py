@@ -47,6 +47,10 @@ class BaseIngredientContentTests(TestCase):
         self.assertContains(response, "Hazelnut")
         self.assertNotContains(response, "hazelnut")
 
+    def test_altname_created(self):
+        food = Ingredient.objects.create(listed_name='myfood')
+        self.assertEqual(AltName.objects.get(name='myfood').ingredient, food)
+
 
 class CombinationsTests(TestCase):
     """
