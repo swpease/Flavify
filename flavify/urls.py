@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from . import views
+
 urlpatterns = [
+    url(r'^$', views.home, name='home'),
     url(r'^ingredient/', include('flavors.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^select2/', include('django_select2.urls')),
