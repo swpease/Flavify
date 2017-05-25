@@ -7,3 +7,7 @@ from django.conf import settings
 
 def home(request):
     return render(request, "flavify/index.html", {})
+
+
+def home_files(request, filename):
+    return render(request, filename, {}, content_type='text/plain')

@@ -20,6 +20,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def get_full_url(self, path):
         return self.live_server_url + reverse(path)
 
+
     def test_home_title(self):
         self.browser.get(self.get_full_url("home"))
         self.assertIn("Flavify", self.browser.title)
@@ -28,3 +29,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser.get(self.get_full_url("home"))
         h1 = self.browser.find_element_by_tag_name("h1")
         self.assertEqual(h1.value_of_css_property("color"), "rgb(200, 50, 255)")
+
+    def test_home_files(self):
+        self.browser.get(self.live_server_url + "/robots.txt")
+        self.assertNotIn("Not Found", self.browser.title)
+        self.browser.get(self.live_server_url + "/humans.txt")
+        self.assertNotIn("Not Found", self.browser.title)
