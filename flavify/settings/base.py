@@ -101,6 +101,10 @@ ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 # TODO... setup email system
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# For customizing the login form from allauth
+ACCOUNT_FORMS = {'login': 'flavors.forms.CustomLoginForm'}
+
+
 WSGI_APPLICATION = 'flavify.wsgi.application'
 
 

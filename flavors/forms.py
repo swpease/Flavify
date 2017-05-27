@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django_select2.forms import Select2MultipleWidget
 
 from .models import Ingredient, Combination, IngredientSubmission
+from allauth.account.forms import LoginForm
 
 
 def validate_count(ingredients):
@@ -40,3 +41,13 @@ class IngredientSubmissionForm(forms.ModelForm):
         widgets = {
             'submittor': forms.HiddenInput()
         }
+
+
+# ref: https://stackoverflow.com/questions/19489699/how-to-add-class-id-placeholder-attributes-to-a-field-in-django-model-forms
+# ref: https://stackoverflow.com/questions/21368481/django-allauth-how-to-add-custom-css-class-to-fields
+# ref: https://docs.djangoproject.com/en/1.11/ref/forms/widgets/#django.forms.Widget.attrs
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomLoginForm, self).__init__(*args, **kwargs)
+        self.fields['login'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control'})
