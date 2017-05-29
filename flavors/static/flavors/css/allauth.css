@@ -1,4 +1,4 @@
-.all-signin {
+.login-form-wrapper, .signup-form-wrapper {
   max-width: 300px;
   padding: 19px 29px 29px;
   margin: 30px auto 20px;

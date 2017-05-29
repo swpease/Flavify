@@ -92,17 +92,21 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# TODO... change this to be just '/'
-LOGIN_REDIRECT_URL = '/ingredient/'
+
+# BEGIN allauth settings
+LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 # Ref: https://docs.djangoproject.com/en/1.11/topics/email/
 # TODO... setup email system
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # For customizing the login form from allauth
-ACCOUNT_FORMS = {'login': 'flavors.forms.CustomLoginForm'}
+ACCOUNT_FORMS = {
+    'login': 'flavors.forms.CustomLoginForm',
+    'signup': 'flavors.forms.CustomSignupForm',
+}
+# END allauth settings
 
 
 WSGI_APPLICATION = 'flavify.wsgi.application'

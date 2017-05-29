@@ -13,9 +13,9 @@
 
 {% block content %}
 <div class="container">
-  <div class="all-signin">
+  <div class="login-form-wrapper">
     <form class="login" method="POST" action="{% url 'account_login' %}">
-      <h3 class="form-signin-heading">Sign In</h3>
+      <h3 class="form-signin-heading">Log In</h3>
       <hr>
       {% csrf_token %}
       <!-- {{ form.as_p }} -->
@@ -42,7 +42,7 @@
       <div class="form-group">
         <!--originally class="button secondaryAction"-->
         <a class="pull-right" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-        <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+        <button class="btn btn-primary" type="submit">{% trans "Log In" %}</button>
       </div>
       <hr>
     </form>
@@ -50,7 +50,7 @@
     {% get_providers as socialaccount_providers %}
 
     <div class="row socialaccount_ballot">
-      <p class="text-center">{% blocktrans %}or you can sign in with{% endblocktrans %}</p>
+      <p class="text-center">{% blocktrans %}or you can log in with{% endblocktrans %}</p>
       <ul class="socialaccount_providers">
         {% include "socialaccount/snippets/provider_list.html" with process="login" %}
       </ul>
