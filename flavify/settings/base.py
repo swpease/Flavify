@@ -107,6 +107,11 @@ ACCOUNT_FORMS = {
     'login': 'flavors.forms.CustomLoginForm',
     'signup': 'flavors.forms.CustomSignupForm',
 }
+
+SOCIALACCOUNT_FORMS = {
+    'signup': 'flavors.forms.CustomSocialSignupForm',
+}
+
 # END allauth settings
 
 

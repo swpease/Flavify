@@ -5,6 +5,7 @@ from django_select2.forms import Select2MultipleWidget
 
 from .models import Ingredient, Combination, IngredientSubmission
 from allauth.account.forms import LoginForm, SignupForm
+from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 
 
 def validate_count(ingredients):
@@ -63,5 +64,12 @@ class CustomSignupForm(SignupForm):
     """
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
+        for field in self.fields.keys():
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
+
+
+class CustomSocialSignupForm(SocialSignupForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSocialSignupForm, self).__init__(*args, **kwargs)
         for field in self.fields.keys():
             self.fields[field].widget.attrs.update({'class': 'form-control'})
