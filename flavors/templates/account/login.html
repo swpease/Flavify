@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load account socialaccount %}
+{% load bootstrap3 %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -15,34 +16,21 @@
 <div class="container">
   <div class="login-form-wrapper">
     <form class="login" method="POST" action="{% url 'account_login' %}">
-      <h3 class="form-signin-heading">Log In</h3>
+      <h3 class="form-signin-heading">Sign In</h3>
       <hr>
       {% csrf_token %}
-      <!-- {{ form.as_p }} -->
-      {{ form.non_field_errors }}
-      <div class="form-group">
-        {{ form.login.errors }}
-        <label for="{{ form.login.id_for_label }}" class="sr-only">Login:</label>
-        {{ form.login }}
-      </div>
-      <div class="form-group">
-        {{ form.password.errors }}
-        <label for="{{ form.password.id_for_label }}" class="sr-only">Password:</label>
-        {{ form.password }}
-      </div>
-      <label class="form-group">
-        {{ form.remember.errors }}
-        <label for="{{ form.remember.id_for_label }}" class="sr-only">Remember:</label>
-        {{ form.remember }}
-        Remember me
-      </label>
+      {% bootstrap_form_errors form %}
+      {% bootstrap_field form.login show_label=False %}
+      {% bootstrap_field form.password show_label=False %}
+      {% bootstrap_field form.remember show_label=False %}
+
       {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
       <div class="form-group">
         <!--originally class="button secondaryAction"-->
         <a class="pull-right" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-        <button class="btn btn-primary" type="submit">{% trans "Log In" %}</button>
+        <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
       </div>
       <hr>
     </form>

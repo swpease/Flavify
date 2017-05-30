@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
@@ -101,16 +103,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 # Ref: https://docs.djangoproject.com/en/1.11/topics/email/
 # TODO... setup email system
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# For customizing the login form from allauth
-ACCOUNT_FORMS = {
-    'login': 'flavors.forms.CustomLoginForm',
-    'signup': 'flavors.forms.CustomSignupForm',
-}
-
-SOCIALACCOUNT_FORMS = {
-    'signup': 'flavors.forms.CustomSocialSignupForm',
-}
 
 # END allauth settings
 
