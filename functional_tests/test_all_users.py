@@ -23,7 +23,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_home_title(self):
         self.browser.get(self.get_full_url("home"))
-        self.assertIn("Flavify", self.browser.title)
+        self.assertIn("Flavory", self.browser.title)
 
     def test_h1_css(self):
         self.browser.get(self.get_full_url("home"))
