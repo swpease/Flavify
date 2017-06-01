@@ -41,6 +41,18 @@ class TestAllauth(StaticLiveServerTestCase):
     def get_full_url(self, namespace):
         return self.live_server_url + reverse(namespace)
 
+    def signup(self):
+        self.browser.get(self.get_full_url("account_signup"))
+        username = self.get_element_by_id("id_username")
+        email = self.get_element_by_id("id_email")
+        pw1 = self.get_element_by_id("id_password1")
+        pw2 = self.get_element_by_id("id_password2")
+        ActionChains(self.browser).send_keys_to_element(
+            username, "dummyuser").send_keys_to_element(
+            email, "x@y.com").send_keys_to_element(
+            pw1, "terriblepassword").send_keys_to_element(
+            pw2, "terriblepassword").perform()
+
     # BEGIN ACTUAL TESTS
     def test_login(self):
         # Just checking that the Bootstrap is correctly integrated with the allauth.
@@ -64,7 +76,20 @@ class TestAllauth(StaticLiveServerTestCase):
     def test_logout(self):
         pass
 
-    # NOT SURE HOW TO GET THIS TO WORK
+    def test_password_reset(self):
+        self.signup()
+        self.browser.get(self.get_full_url("account_reset_password"))
+        form_wrapper = self.get_elements_by_class("form-group")
+        self.assertEqual(len(form_wrapper), 1)
+        forms_el_mark = self.get_elements_by_class("form-control")
+        self.assertEqual(len(forms_el_mark), 1)
+        sr = self.get_elements_by_class("sr-only")
+        self.assertEqual(len(sr), 2)
+
+    # def test_password_change(self):
+
+
+        # NOT SURE HOW TO GET THIS TO WORK
     # def test_social_signup(self):
     #     self.browser.get(self.get_full_url("account_signup"))
     #     twitter_icon = self.get_element_by_class("twitter")
@@ -75,19 +100,3 @@ class TestAllauth(StaticLiveServerTestCase):
     #     self.assertEqual(len(forms_el_mark), 2)
     #     sr = self.get_elements_by_class("sr-only")
     #     self.assertEqual(len(sr), 3)
-
-
-        # def test_google_login(self):
-    #     self.browser.get(self.get_full_url("home"))
-    #     google_login = self.get_element_by_id("google_login")
-    #     with self.assertRaises(TimeoutException):
-    #         self.get_element_by_id("logout")
-    #     self.assertEqual(
-    #         google_login.get_attribute("href"),
-    #         self.live_server_url + "/accounts/google/login")
-    #     google_login.click()
-    #     with self.assertRaises(TimeoutException):
-    #         self.get_element_by_id("google_login")
-    #     google_logout = self.get_element_by_id("logout")
-    #     google_logout.click()
-    #     google_login = self.get_element_by_id("google_login")
