@@ -47,11 +47,24 @@ class TestAllauth(StaticLiveServerTestCase):
         email = self.get_element_by_id("id_email")
         pw1 = self.get_element_by_id("id_password1")
         pw2 = self.get_element_by_id("id_password2")
+        btn = self.browser.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".form-group .btn")))
+        ac = ActionChains(self.browser)
+        ac.send_keys_to_element(username, "me")
+        ac.send_keys_to_element(email, "x@y.com")
+        ac.send_keys_to_element(pw1, "terriblepw")
+        ac.send_keys_to_element(pw2, "terriblepw")
+        ac.click(btn)
+
+    def signin(self):
+        # self.browser.get(self.get_full_url("account_login"))
+        username = self.get_element_by_id("id_login")
+        pw = self.get_element_by_id("id_password")
+        remember = self.get_element_by_id("id_remember")
+        btn = self.browser.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".form-group .btn")))
         ActionChains(self.browser).send_keys_to_element(
-            username, "dummyuser").send_keys_to_element(
-            email, "x@y.com").send_keys_to_element(
-            pw1, "terriblepassword").send_keys_to_element(
-            pw2, "terriblepassword").perform()
+            username, "me").send_keys_to_element(
+            pw, "terriblepw").click(
+            btn).perform()
 
     # BEGIN ACTUAL TESTS
     def test_login(self):
@@ -73,11 +86,11 @@ class TestAllauth(StaticLiveServerTestCase):
         sr = self.get_elements_by_class("sr-only")
         self.assertEqual(len(sr), 5)
 
-    def test_logout(self):
-        pass
+    # def test_logout(self):
+    #     pass
 
     def test_password_reset(self):
-        self.signup()
+        # self.signup()
         self.browser.get(self.get_full_url("account_reset_password"))
         form_wrapper = self.get_elements_by_class("form-group")
         self.assertEqual(len(form_wrapper), 1)
@@ -86,7 +99,16 @@ class TestAllauth(StaticLiveServerTestCase):
         sr = self.get_elements_by_class("sr-only")
         self.assertEqual(len(sr), 2)
 
-    # def test_password_change(self):
+    def test_password_change(self):
+        self.signup()
+        self.browser.get(self.get_full_url("account_change_password"))
+        self.signin()
+        form_wrapper = self.get_elements_by_class("form-groups")
+        self.assertEqual(len(form_wrapper), 3)
+        forms_el_mark = self.get_elements_by_class("form-control")
+        self.assertEqual(len(forms_el_mark), 3)
+        sr = self.get_elements_by_class("sr-only")
+        self.assertEqual(len(sr), 4)
 
 
         # NOT SURE HOW TO GET THIS TO WORK
