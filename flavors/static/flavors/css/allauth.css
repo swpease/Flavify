@@ -1,7 +1,20 @@
+/* For gap b/w navbar and main content */
+body {
+  padding-top: 80px;
+}
+
+/* For gap b/w button rows when they wrap on small screens */
+.button-wrapper {
+  margin-top: -8px;
+}
+.button-wrapper .btn {
+  margin-top: 8px;
+}
+
 .account-form-wrapper {
   max-width: 300px;
   padding: 19px 29px 29px;
-  margin: 30px auto 20px;
+  margin: 0 auto 20px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 5px;
