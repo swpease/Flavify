@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
+
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,7 @@ ROOT_URLCONF = 'flavify.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,14 +94,18 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# TODO... change this to be just '/'
-LOGIN_REDIRECT_URL = '/ingredient/'
+
+# BEGIN allauth settings
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 # Ref: https://docs.djangoproject.com/en/1.11/topics/email/
 # TODO... setup email system
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# END allauth settings
+
 
 WSGI_APPLICATION = 'flavify.wsgi.application'
 
@@ -157,3 +163,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]

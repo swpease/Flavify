@@ -1,0 +1,6 @@
+# www.robotstxt.org/
+
+# Allow crawling of all content: have "Disallow: "
+# Need to change upon deployment.
+User-agent: *
+Disallow: /

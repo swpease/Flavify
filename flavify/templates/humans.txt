@@ -1,0 +1,19 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Scott Pease -- Developer -- @beakermugs
+
+# THANKS
+
+    Mom!
+
+# TECHNOLOGY COLOPHON
+
+    Django,
+    HTML5 Boilerplate,
+    Bootstrap,
+    CSS3,
+    jQuery,
+    Modernizr

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load bootstrap3 %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block head_css %}
+  <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <div class="account-form-wrapper">
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+      <h3 class="form-signin-heading">Sign In</h3>
+      <hr>
+      {% csrf_token %}
+      {% bootstrap_form_errors form %}
+      {% bootstrap_field form.login show_label=False %}
+      {% bootstrap_field form.password show_label=False %}
+      {% bootstrap_field form.remember show_label=False %}
+
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+      <div class="form-group">
+        <!--originally class="button secondaryAction"-->
+        <a class="pull-right" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+        <button class="btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+      </div>
+      <hr>
+    </form>
+
+    {% get_providers as socialaccount_providers %}
+
+    <div class="row socialaccount_ballot">
+      <p class="text-center">{% blocktrans %}or you can log in with{% endblocktrans %}</p>
+      <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+      </ul>
+    </div>
+
+    {% include "socialaccount/snippets/login_extra.html" %}
+  </div>
+</div>
+{% endblock content %}

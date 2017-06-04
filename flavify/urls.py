@@ -16,9 +16,21 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+# ref: https://stackoverflow.com/questions/7013735/turn-off-caching-of-static-files-in-django-development-server
+from django.conf import settings
+from django.contrib.staticfiles.views import serve as serve_static
+from django.views.decorators.cache import never_cache
+
+from . import views
+
 urlpatterns = [
+    url(r'^$', views.home, name='home'),
+    url(r'^(?P<filename>(robots.txt)|(humans.txt))$', views.home_files, name='home_files'),
     url(r'^ingredient/', include('flavors.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^select2/', include('django_select2.urls')),
     url(r'^accounts/', include('allauth.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(url(r'^static/(?P<path>.*)$', never_cache(serve_static)))
