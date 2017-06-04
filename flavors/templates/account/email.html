@@ -16,11 +16,12 @@
   <div class="row">
     <div class="col-sm-offset-2 col-sm-8">
       <div class="panel panel-default">
+
         <div class="panel-heading">
           <h3 class="panel-title">{% trans "E-mail Addresses" %}</h3>
         </div>
 
-        <div class="panel-body">
+        <div class="panel-body form-panel">
           {% if user.emailaddress_set.all %}
           <form action="{% url 'account_email' %}" class="email_list" method="post">
             {% csrf_token %}
@@ -45,7 +46,7 @@
             </div>
             <div class="button-wrapper">
                   <button class="btn btn-default secondaryAction" type="submit" name="action_primary" >{% trans 'Make Primary' %}</button>
-                  <button class="btn btn-default secondaryAction" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
+                  <button class="btn btn-default verify-btn" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
                   <button class="btn btn-warning primaryAction" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
             </div>
           </form>
@@ -83,16 +84,16 @@
 {# {% block extra_body %}#}
 {% block footer_js %}
 <script type="text/javascript">
-(function() {
-  var message = "{% trans 'Do you really want to remove the selected e-mail address?' %}";
-  var actions = document.getElementsByName('action_remove');
-  if (actions.length) {
-    actions[0].addEventListener("click", function(e) {
-      if (! confirm(message)) {
-        e.preventDefault();
-      }
-    });
-  }
-})();
+  (function() {
+    let message = "{% trans 'Do you really want to remove the selected e-mail address?' %}";
+    let actions = document.getElementsByName('action_remove');
+    if (actions.length) {
+      actions[0].addEventListener("click", function(e) {
+        if (! confirm(message)) {
+          e.preventDefault();
+        }
+      });
+    }
+  })();
 </script>
 {% endblock %}
