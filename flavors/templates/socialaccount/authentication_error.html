@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block head_title %}{% trans "Social Network Login Failure" %}{% endblock %}
+
+{% block head_css %}
+  <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <div class="account-form-wrapper">
+    <h3>{% trans "Social Network Login Failure" %}</h3>
+    <hr>
+    <p class="alert alert-danger">{% trans "An error occurred while attempting to login via your social network account." %}</p>
+  </div>
+</div>
+{% endblock content %}
