@@ -11,7 +11,7 @@ body {
   margin-top: 8px;
 }
 
-.account-form-wrapper {
+.account-form-wrapper, .flavory-form-wrapper {
   max-width: 300px;
   padding: 19px 29px 29px;
   margin: 0 auto 20px;
@@ -19,6 +19,11 @@ body {
   border: 1px solid #e5e5e5;
   border-radius: 5px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Want to make this neater... */
+.flavory-form-wrapper {
+  max-width: 362px;
 }
 
 .socialaccount_providers li {
