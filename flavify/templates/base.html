@@ -44,10 +44,27 @@
           <a class="navbar-brand" href="#">Flavory</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <div class="navbar-form navbar-right">
-            <a class="btn btn-primary" href="/accounts/signup">Sign up</a>
-            <a class="btn btn-default" href="/accounts/login/">Sign in</a>
-          </div>
+          {% if user.is_authenticated %}
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a id="user-dropdown" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  {{ user }}
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="user-dropdown">
+                  <li>
+                    <a href="/accounts/logout/">Sign out</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                </ul>
+              </li>
+            </ul>
+          {% else %}
+            <ul class="navbar-form navbar-right">
+              <a class="btn btn-primary" href="/accounts/signup">Sign up</a>
+              <a class="btn btn-default" href="/accounts/login/">Sign in</a>
+            </ul>
+          {% endif %}
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
