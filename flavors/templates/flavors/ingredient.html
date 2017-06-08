@@ -1,25 +1,45 @@
-<h1>{{ listing.listed_name|lower|capfirst }}</h1>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-{% if altName.name != listing.listed_name %}
-  <h5>Redirected from {{ altName.name|capfirst }}</h5>
-{% endif %}
+{% load bootstrap3 %}
 
-{% if listing.umbrella_cat %}
-  <h4>See also: <a href="{% url 'flavors:pairings' listing.umbrella_cat %}">{{ listing.umbrella_cat|capfirst }}</a> </h4>
-{% endif %}
+{% block head_title %}{{ listing.listed_name|lower|capfirst }}{% endblock %}
 
-<ul>
-    {% for taste in listing.tastes.all %}
-      <li>{{ taste.mouth_taste }}</li>
-    {% endfor %}
-</ul>
+{% block head_css %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+  <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+{% endblock %}
 
-<ul>
-  {% for combo in combos %}
-    <li>
-      {% for ingredient in combo %}
-        {{ ingredient.listed_name }}
+{% block content %}
+<div class="container">
+  <h1>{{ listing.listed_name|lower|capfirst }}</h1>
+
+  {% if altName.name != listing.listed_name %}
+    <h5>Redirected from {{ altName.name|capfirst }}</h5>
+  {% endif %}
+
+  {% if listing.umbrella_cat %}
+    <h4>See also: <a href="{% url 'flavors:pairings' listing.umbrella_cat %}">{{ listing.umbrella_cat|capfirst }}</a> </h4>
+  {% endif %}
+
+  <ul>
+      {% for taste in listing.tastes.all %}
+        <li>{{ taste.mouth_taste }}</li>
       {% endfor %}
-    </li>
-  {% endfor %}
-</ul>
+  </ul>
+
+  <ul>
+    {% for combo in combos %}
+      <li>
+        {% for ingredient in combo %}
+          {{ ingredient.listed_name }}
+        {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %}
+
+{% block footer_js %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+{% endblock %}
