@@ -72,7 +72,8 @@ def pairings(request, ingredient):
     Context objects:
       :altName: AltName object. The requested ingredient.
       :listing: Ingredient object of the requested ingredient.
-      :combos: if user: tuple of (list of QuerySets of Ingredients, instance of associated UserComboData)
+      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of associated UserComboData)
+               (b) no User: list of QuerySets of Ingredients
     """
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)

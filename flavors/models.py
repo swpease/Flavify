@@ -128,6 +128,18 @@ class UserComboData(models.Model):
     # cooking_method = models.CharField(max_length=20, choices="TBD")
     # cuisine = models.CharField(max_length=50, choices="TBD")
 
+    # Might want to modify this if I am interested in likes/(likes + dislikes) vs likes/tries
+    def calc_percent_likes(self):
+        total_votes = 0
+        all_opinions = UserComboData.objects.filter(combination=self.combination).count()
+        likes = UserComboData.objects.filter(combination=self.combination, like=True).count()
+        if all_opinions == 0:
+            return 0  # Do I want to return 0 here, or what?
+        else:
+            return (likes / all_opinions) * 100
+
+    def get_num_tried(self):
+        return UserComboData.objects.filter(combination=self.combination).count()
 
 
 """ Do I have any use for one of these?
