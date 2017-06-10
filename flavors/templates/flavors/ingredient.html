@@ -39,7 +39,11 @@
       <tbody>
         {% for combo in combos %}
           <tr>
-            <td>{{ combo }}</td>
+            <td>
+              {% for ing in combo %}
+                {{ ing }}
+              {% endfor %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>
