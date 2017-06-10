@@ -3,8 +3,9 @@ import requests
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission
+from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
 
 
@@ -71,15 +72,26 @@ def pairings(request, ingredient):
     Context objects:
       :altName: AltName object. The requested ingredient.
       :listing: Ingredient object of the requested ingredient.
-      :combos: list of QuerySets of Ingredients
+      :combos: if user: tuple of (list of QuerySets of Ingredients, instance of associated UserComboData)
     """
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
     combos = listing.combination_set.all()
-    complements = []
-    for combo in combos:
-        combo_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
-        complements.append(combo_filtered)
-    context = {'altName': alt_name, 'listing': listing, 'combos': complements}
+    combo_data = []
+    if request.user.is_authenticated:
+        for combo in combos:
+            combo_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            try:
+                user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
+            except ObjectDoesNotExist:
+                user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX
+            combo_data.append((combo_filtered, user_combo_data))
+    else:
+        for combo in combos:
+            combo_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)  # pairing ingredients
+            # combo_data = UserComboData.objects.get(combination=combo)
+            combo_data.append(combo_filtered)
+
+    context = {'altName': alt_name, 'listing': listing, 'combos': combo_data}
     return render(request, 'flavors/ingredient.html', context)
