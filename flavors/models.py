@@ -101,13 +101,12 @@ class Combination(models.Model):
         Percent likes taken to be likes/tries.
         :return: percentage
         """
-        total_votes = 0
         all_opinions = UserComboData.objects.filter(combination=self).count()
         likes = UserComboData.objects.filter(combination=self, like=True).count()
         if all_opinions == 0:
             return 0  # Do I want to return 0 here, or what?
         else:
-            return (likes / all_opinions) * 100
+            return int((likes / all_opinions) * 100)
 
     def get_num_tried(self):
         """

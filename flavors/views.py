@@ -67,32 +67,33 @@ def submit_ingredient(request):
 
     return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
+
+# NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
 def pairings(request, ingredient):
     """
     Context objects:
       :altName: AltName object. The requested ingredient.
       :listing: Ingredient object of the requested ingredient.
-      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of associated UserComboData)
-               (b) no User: list of QuerySets of Ingredients
+      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of Combo, instance of associated UserComboData)
+               (b) no User: tuple of (list of QuerySets of Ingredients, instance of Combo)
     """
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
     combos = listing.combination_set.all()
-    combo_data = []
+    data_row = []
     if request.user.is_authenticated:
         for combo in combos:
-            combo_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
                 user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX
-            combo_data.append((combo_filtered, user_combo_data))
+            data_row.append((ings_filtered, combo, user_combo_data))
     else:
         for combo in combos:
-            combo_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)  # pairing ingredients
-            # combo_data = UserComboData.objects.get(combination=combo)
-            combo_data.append(combo_filtered)
+            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            data_row.append((ings_filtered, combo))
 
-    context = {'altName': alt_name, 'listing': listing, 'combos': combo_data}
+    context = {'altName': alt_name, 'listing': listing, 'data_row': data_row}
     return render(request, 'flavors/ingredient.html', context)
