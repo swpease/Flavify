@@ -27,7 +27,6 @@ def recaptcha_validation(request):
 def index(request):
     return HttpResponse("This is the index page for now.")
 
-
 def submit_combo(request):
     if request.method == 'POST':
         form = CombinationForm(request.POST)

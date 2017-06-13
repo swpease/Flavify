@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load bootstrap3 %}
+
+{% block head_title %}{{ listing.listed_name|lower|capfirst }}{% endblock %}
+
+{% block head_css %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<h1>hello</h1>
+</div>
+{% endblock content %}
+
+{% block footer_js %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+  <script src="{% static 'js/vendor/bootstrap-table-editable.min.js' %}"></script>
+{% endblock %}
