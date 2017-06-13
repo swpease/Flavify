@@ -34,18 +34,18 @@
     <table class="table table-striped table-hover" data-toggle="table"> <!-- .table-condensed ?-->
       <thead>
         <tr>
-            <th>Ingredients</th>
-            <th># Tried</th>
-            <th>% Liked</th>
-            <th>Tried</th>
-            <th>Like</th>
-            <th data-editable="true" data-editable-type="textarea" data-editable-mode="inline">Notes</th>
+            <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
+            <th data-field="numtried" data-sortable="true"># Tried</th>
+            <th data-field="pct liked" data-sortable="true">% Liked</th>
+            <th data-field="tried" data-sortable="true">Tried</th>
+            <th data-field="like">Like</th>
+            <th data-field="notes" data-editable="true" data-editable-type="textarea" data-editable-mode="inline">Notes</th>
         </tr>
       </thead>
       <tbody>
         {% for ings, combo, userComboData in data_row %}
           <tr>
-            <td>
+            <td data-numings='{{ ings.count }}'>
               {% for ing in ings %}
                 {{ ing }}
               {% endfor %}
@@ -65,15 +65,15 @@
   <table class="table table-striped table-hover" data-toggle="table"> <!-- .table-condensed ?-->
     <thead>
       <tr>
-          <th>Ingredients</th>
-          <th># Tried</th>
-          <th>% Liked</th>
+          <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
+          <th data-field="numtried" data-sortable="true"># Tried</th>
+          <th data-field="pctliked" data-sortable="true">% Liked</th>
       </tr>
     </thead>
     <tbody>
       {% for ings, combo in data_row %}
         <tr>
-          <td>
+          <td data-numIngs='{{ ings.count }}'>
             {% for ing in ings %}
               {{ ing }}
             {% endfor %}
