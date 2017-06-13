@@ -35,9 +35,8 @@
       <thead>
         <tr>
             <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
-            <th data-field="numtried" data-sortable="true"># Tried</th>
-            <th data-field="pct liked" data-sortable="true">% Liked</th>
-            <th data-field="tried" data-sortable="true">Tried</th>
+            <th data-field="ratings" data-sortable="true">Ratings</th>
+            <th data-field="pctliked" data-sortable="true">% Liked</th>
             <th data-field="like">Like</th>
             <th data-field="star" data-sortable="true">Star</th>
             <th data-field="notes" data-editable="true" data-editable-type="textarea" data-editable-mode="inline">Notes</th>
@@ -53,7 +52,6 @@
             </td>
             <td>{{combo.get_num_tried}}</td>
             <td>{{combo.calc_percent_likes}}</td>
-            <td>{{ userComboData.favorite }}</td>
             <td>
               <button type="button" class="btn btn-default" aria-label="Like">
                 <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
@@ -63,7 +61,9 @@
               </button>
             </td>
             <td>
-              <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+              <button type="button" class="btn btn-default" aria-label="Star">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+              </button>
             </td>
             <td>{{ userComboData.note }}</td>
           </tr>
@@ -77,7 +77,7 @@
     <thead>
       <tr>
           <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
-          <th data-field="numtried" data-sortable="true"># Tried</th>
+          <th data-field="ratings" data-sortable="true">Ratings</th>
           <th data-field="pctliked" data-sortable="true">% Liked</th>
       </tr>
     </thead>
