@@ -59,7 +59,7 @@ def submit_ingredient(request):
             result = recaptcha_validation(request)
             if result['success']:
                 form.save()
-                return HttpResponseRedirect('/ingredient/shrimp')
+                return HttpResponseRedirect('/')
             else:
                 return HttpResponseRedirect('/ingredient/hazelnut')
             # TODO... decide on redirects.
