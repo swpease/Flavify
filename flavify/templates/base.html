@@ -44,6 +44,11 @@
           <a class="navbar-brand" href="#">Flavory</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+<!--          <form class="" action="{% url 'home' %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Search</button>
+          </form>
+        -->
           {% if user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
@@ -53,9 +58,29 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="user-dropdown">
                   <li>
-                    <a href="/accounts/logout/">Sign out</a>
+                    <a href="{% url 'profile' %}">My Profile</a>
                   </li>
                   <li role="separator" class="divider"></li>
+                  <li>
+                    <a href="{% url 'flavors:submit-combo' %}">Submit Combination</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'flavors:submit-ingredient' %}">Submit Ingredients</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a href="/accounts/email">Account Email</a>
+                  </li>
+                  <li>
+                    <a href="/accounts/password/change">Change Password</a>
+                  </li>
+                  <li>
+                    <a href="/accounts/social/connections">Social Accounts</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a href="/accounts/logout/">Sign out</a>
+                  </li>
                 </ul>
               </li>
             </ul>

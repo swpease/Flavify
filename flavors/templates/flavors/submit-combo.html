@@ -1,32 +1,43 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Submit a New Flavor Combination</title>
-    {{ form.media.css }}
-    <style type="text/css">
-      select {
-        width: 200px;
-      }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load bootstrap3 %}
+
+{% block head_title %}Submit a New Flavor Combination{% endblock %}
+{% block head_css %}
+{{ form.media.css }}
+<link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+<style type="text/css">
+  select {
+    width: 200px;
+  }
+</style>
+{% endblock head_css %}
+
+{% block content %}
+<div class="flavory-form-wrapper">
   <form action="{% url 'flavors:submit-combo' %}" method="post">
+    <h3>New Combination</h3>
+    <hr>
     {% csrf_token %}
-    {{ form }}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.ingredients show_label=False %}
 
-    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+    <div class="g-recaptcha form-group" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
 
-    <input type="submit" name="submit" value="Submit">
+    <div class="form-group">
+       <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
   </form>
-  <script src="{% static 'js/vendor/jquery-3.2.1.js' %}"></script>
-  <script src='https://www.google.com/recaptcha/api.js'></script>
-  <script type="text/javascript">
-    window.onerror = function (msg) {
-      $("body").attr("JSError", msg);
-    }
-  </script>
-  {{ form.media.js }}
-</body>
-</html>
+</div>
+{% endblock content %}
+
+{% block footer_js %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script type="text/javascript">
+  window.onerror = function (msg) {
+    $("body").attr("JSError", msg);
+  }
+</script>
+{{ form.media.js }}
+{% endblock footer_js %}

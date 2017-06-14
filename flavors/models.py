@@ -95,6 +95,26 @@ class Combination(models.Model):
     datetime_submitted = models.DateTimeField(auto_now_add=True)
     submittor = models.CharField(max_length=100, default="admin")
 
+    # Might want to modify this if I am interested in likes/(likes + dislikes) vs likes/tries
+    def calc_percent_likes(self):
+        """
+        Percent likes taken to be likes/tries.
+        :return: percentage
+        """
+        all_opinions = UserComboData.objects.filter(combination=self).count()
+        likes = UserComboData.objects.filter(combination=self, like=True).count()
+        if all_opinions == 0:
+            return 0  # Do I want to return 0 here, or what?
+        else:
+            return int((likes / all_opinions) * 100)
+
+    def get_num_tried(self):
+        """
+        Number of tries should just be the number of instances of UserComboData with this Combination
+        :return: non-negative int.
+        """
+        return UserComboData.objects.filter(combination=self).count()
+
     def __str__(self):
         ings = [i.listed_name for i in self.ingredients.all()]
         return " ".join(ings)
@@ -127,7 +147,6 @@ class UserComboData(models.Model):
     note = models.CharField(max_length=500, blank=True)
     # cooking_method = models.CharField(max_length=20, choices="TBD")
     # cuisine = models.CharField(max_length=50, choices="TBD")
-
 
 
 """ Do I have any use for one of these?

@@ -15,7 +15,7 @@ def validate_count(ingredients):
 
 class CombinationForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(),
-                                                 widget=Select2MultipleWidget,
+                                                 widget=Select2MultipleWidget,  # TODO... see about kwargs to limit selections.
                                                  required=True,
                                                  to_field_name="listed_name",
                                                  label="New Combination",
@@ -37,6 +37,6 @@ class IngredientSubmissionForm(forms.ModelForm):
     class Meta:
         model = IngredientSubmission
         fields = ['submission', 'submittor']
-        widgets = {
+        widgets = {  # TODO delete this
             'submittor': forms.HiddenInput()
         }
