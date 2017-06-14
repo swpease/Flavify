@@ -34,11 +34,14 @@ def submit_combo(request):
             result = recaptcha_validation(request)
             if result['success']:
                 # If I had a ModelForm, I could just use form.save()
-                new_combo = Combination()
+                new_combo = Combination(submittor=request.user)
                 new_combo.save()
                 for ing in form.cleaned_data['ingredients']:
                     new_combo.ingredients.add(ing)
-                return HttpResponseRedirect('/ingredient/shrimp')
+                # By default, the submittor is assumed to "like" the combination.
+                new_usercombodata = UserComboData(combination=new_combo, user=request.user, like=True)
+                new_usercombodata.save()
+                return HttpResponseRedirect('/')
 
             else:
                 return HttpResponseRedirect('/ingredient/hazelnut')
