@@ -16,5 +16,6 @@ def home_files(request, filename):
 
 
 def profile(request):
-    context = {}
-    return render(request, "flavify/profile.html", context)
+
+    user_combo_data = UserComboData.objects.filter(user=request.user)
+    return render(request, "flavify/profile.html", {"user_combo_data": user_combo_data})

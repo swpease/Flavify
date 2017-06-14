@@ -87,7 +87,7 @@ def pairings(request, ingredient):
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
-                user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX
+                user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX. Do I need to put in user and combinatoin here?
             data_row.append((ings_filtered, combo, user_combo_data))
     else:
         for combo in combos:
