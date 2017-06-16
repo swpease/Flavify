@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
   <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -34,16 +35,16 @@
             </td>
             {% endwith %}
             <td>
-              <button type="button" class="btn btn-default" aria-label="Like">
-                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+              <button type="button" class="table-btn" data-user-like="{{ user_combo_datum.like }}" aria-label="Like">
+                <span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>
               </button>
-              <button type="button" class="btn btn-default" aria-label="Dislike">
-                <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+              <button type="button" class="table-btn" data-user-dislike="{{ user_combo_datum.dislike }}" aria-label="Dislike">
+                <span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>
               </button>
             </td>
             <td>
-              <button type="button" class="btn btn-default" aria-label="Star">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+              <button type="button" class="table-btn" data-user-save="{{ user_combo_datum.favorite }}" aria-label="Star">
+                <span class="glyphicon glyphicon-star table-icon" aria-hidden="true"></span>
               </button>
             </td>
             <td>{{ user_combo_datum.note }}</td>
