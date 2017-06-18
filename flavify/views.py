@@ -1,6 +1,9 @@
+import json
+
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from flavors.models import UserComboData, Combination
 
@@ -25,3 +28,15 @@ def profile(request):
     submitted_combos = Combination.objects.filter(submittor=request.user)
     return render(request, "flavify/profile.html", {"user_combo_data": user_combo_data,
                                                 "submitted_combos": submitted_combos})
+
+
+def ajax_update_ucd(request):
+    """
+    Ajax update for UserComboData entries based on user clicking on buttons (like, dislike, save)
+    in any relevant table (i.e. the ingredient's page table, or the profile first table)
+    :return:
+    """
+    if request.method == "POST":
+        data = request.body.decode('utf-8')
+        received_json_data = json.loads(data)
+        return JsonResponse()

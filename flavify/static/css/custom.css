@@ -15,14 +15,14 @@
   opacity: 1.0;
 }
 
-.star-icon span {
+.save-btn[data-btn-on='True'] span {
   color: #dcdc0f;
 }
 
-.like-icon span {
+.like-btn[data-btn-on='True'] span {
   color: #00ff00;
 }
 
-.dislike-icon span {
+.dislike-btn[data-btn-on='True'] span {
   color: #ff0000;
 }

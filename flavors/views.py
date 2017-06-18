@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
@@ -71,6 +72,7 @@ def submit_ingredient(request):
 
 
 # NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
+@ensure_csrf_cookie
 def pairings(request, ingredient):
     """
     Context objects:

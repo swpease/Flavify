@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^(?P<filename>(robots.txt)|(humans.txt))$', views.home_files, name='home_files'),
     url(r'^profile/', views.profile, name="profile"),
+    url(r'^ajax_update_ucd', views.ajax_update_ucd, name="ajax_update"),
     url(r'^ingredient/', include('flavors.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^select2/', include('django_select2.urls')),

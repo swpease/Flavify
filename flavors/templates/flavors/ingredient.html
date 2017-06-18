@@ -32,7 +32,7 @@
 
 {% if user.is_authenticated %}
   <div class="table-responsive">
-    <table class="table table-striped table-hover" data-toggle="table" data-search="true" data-show-columns="true"> <!-- .table-condensed ?-->
+    <table id="combos-table" class="table table-striped table-hover" data-toggle="table" data-search="true" data-show-columns="true"> <!-- .table-condensed ?-->
       <thead>
         <tr>
             <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
@@ -45,7 +45,7 @@
       </thead>
       <tbody>
         {% for ings, combo, userComboData in data_row %}
-          <tr>
+          <tr data-ucd="{{ userComboData.id }}" data-ajax-url="{% url 'ajax_update' %}">
             <td data-numings='{{ ings.count }}'>
               {% for ing in ings %}
                 {{ ing }}
@@ -54,15 +54,15 @@
             <td>{{combo.get_num_tried}}</td>
             <td>{{combo.calc_percent_likes}}</td>
             <td>
-              <button type="button" class="table-btn" data-user-like="{{ userComboData.like }}" aria-label="Like">
+              <button type="button" class="table-btn like-btn" data-btn-on="{{ userComboData.like }}" aria-label="Like">
                 <span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>
               </button>
-              <button type="button" class="table-btn" data-user-dislike="{{ userComboData.dislike }}" aria-label="Dislike">
+              <button type="button" class="table-btn dislike-btn" data-btn-on="{{ userComboData.dislike }}" aria-label="Dislike">
                 <span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>
               </button>
             </td>
             <td>
-              <button type="button" class="table-btn" data-user-save="{{ userComboData.favorite }}" aria-label="Star">
+              <button type="button" class="table-btn save-btn" data-btn-on="{{ userComboData.favorite }}" aria-label="Star">
                 <span class="glyphicon glyphicon-star table-icon" aria-hidden="true"></span>
               </button>
             </td>
