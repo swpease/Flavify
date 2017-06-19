@@ -15,7 +15,7 @@
   opacity: 1.0;
 }
 
-.save-btn[data-btn-on='True'] span {
+.favorite-btn[data-btn-on='True'] span {
   color: #dcdc0f;
 }
 

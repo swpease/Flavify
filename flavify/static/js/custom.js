@@ -57,7 +57,7 @@ function update_ucd(event, target) {
       // this == context == $row
       this.find('.like-btn').attr('data-btn-on', data.like);
       this.find('.dislike-btn').attr('data-btn-on', data.dislike);
-      this.find('.save-btn').attr('data-btn-on', data.favorite);
+      this.find('.favorite-btn').attr('data-btn-on', data.favorite);
       this.attr('data-ucd', data.ucd_id);
     },
     error: function(xhr, status, error) {
@@ -76,7 +76,7 @@ function get_which_changed(target) {
   if (target.hasClass('dislike-btn')) {
     return "dislike";
   }
-  if (target.hasClass('save-btn')) {
+  if (target.hasClass('favorite-btn')) {
     return "favorite";
   }
 }
