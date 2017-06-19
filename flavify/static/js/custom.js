@@ -44,12 +44,12 @@ function update_ucd(event, target) {
   var $row = target.closest('tr');
   var $siblings = $row.find('.table-btn');
   var which_changed = get_which_changed(target);
-  console.log($row)
   $.ajax({
     url: $row.data('ajax-url'),
     type: "POST",
     data: JSON.stringify({
-      'ucd_id': $row.data('ucd'),
+      'ucd_id': $row.attr('data-ucd'),
+      'combo_id': $row.attr('data-cid'),
       'which_changed': which_changed
     }),
     context: $row,
@@ -58,6 +58,7 @@ function update_ucd(event, target) {
       this.find('.like-btn').attr('data-btn-on', data.like);
       this.find('.dislike-btn').attr('data-btn-on', data.dislike);
       this.find('.save-btn').attr('data-btn-on', data.favorite);
+      this.attr('data-ucd', data.ucd_id);
     },
     error: function(xhr, status, error) {
       console.log("Status: " + status);

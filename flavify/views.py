@@ -36,13 +36,15 @@ def ajax_update_ucd(request):
     in any relevant table (i.e. the ingredient's page table, or the profile first table)
     :return:
     """
+    # Is there any point to including a check if user is authenticated?
     if request.method == "POST":
         data = request.body.decode('utf-8')
         received_json_data = json.loads(data)
 
         ucd_id = received_json_data['ucd_id']
+        combo_id = received_json_data['combo_id']
         field_to_update = received_json_data['which_changed']
-        if ucd_id is not None:
+        if ucd_id != "None":
             ucd = UserComboData.objects.get(pk=ucd_id)
             original_val = getattr(ucd, field_to_update)  # Should be a boolean
             setattr(ucd, field_to_update, not original_val)
@@ -56,14 +58,17 @@ def ajax_update_ucd(request):
 
             if not (ucd.like or ucd.dislike or ucd.favorite) and ucd.note == "":
                 deleted_entry = ucd.delete()
-                # Do I want to return here?
             else:
                 ucd.save()
+        else:
+            combo = Combination.objects.get(pk=combo_id)
+            ucd = UserComboData(user=request.user, combination=combo)
+            setattr(ucd, field_to_update, True)
+            ucd.save()
 
-        # else:
-            # ucd = UserComboData(like=ucd_id["like"], dislike=ucd_id["dislike"], favorite=ucd_id["save"])
         return JsonResponse({
             "like": str(ucd.like),
             "dislike": str(ucd.dislike),
             "favorite": str(ucd.favorite),
+            "ucd_id": str(ucd.pk),
         })

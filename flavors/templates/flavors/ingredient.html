@@ -45,7 +45,7 @@
       </thead>
       <tbody>
         {% for ings, combo, userComboData in data_row %}
-          <tr data-ucd="{{ userComboData.id }}" data-ajax-url="{% url 'ajax_update' %}">
+          <tr data-ucd="{{ userComboData.id }}" data-cid="{{ combo.id }}" data-ajax-url="{% url 'ajax_update' %}">
             <td data-numings='{{ ings.count }}'>
               {% for ing in ings %}
                 {{ ing }}
