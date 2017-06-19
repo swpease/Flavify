@@ -47,6 +47,13 @@ def ajax_update_ucd(request):
             original_val = getattr(ucd, field_to_update)  # Should be a boolean
             setattr(ucd, field_to_update, not original_val)
 
+            # Can only like or dislike something
+            if not original_val:
+                if field_to_update == "like":
+                    ucd.dislike = False
+                elif field_to_update == "dislike":
+                    ucd.like = False
+
             if not (ucd.like or ucd.dislike or ucd.favorite) and ucd.note == "":
                 deleted_entry = ucd.delete()
                 # Do I want to return here?
@@ -55,4 +62,8 @@ def ajax_update_ucd(request):
 
         # else:
             # ucd = UserComboData(like=ucd_id["like"], dislike=ucd_id["dislike"], favorite=ucd_id["save"])
-        return JsonResponse({'x': ucd_id})
+        return JsonResponse({
+            "like": str(ucd.like),
+            "dislike": str(ucd.dislike),
+            "favorite": str(ucd.favorite),
+        })
