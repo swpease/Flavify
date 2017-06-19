@@ -6,7 +6,6 @@ $(document).ready(function() {
   $('#combos-table').on('click', '.table-btn', function(event) {
     event.preventDefault();
     var target = $(this);
-    console.log($(this).data('btn-on'));
     update_ucd(event, target);
   })
 
@@ -44,16 +43,14 @@ $(document).ready(function() {
 function update_ucd(event, target) {
   var $row = target.closest('tr');
   var $siblings = $row.find('.table-btn');
+  var which_changed = get_which_changed(target);
   console.log($row.data('ajax-url'))
   $.ajax({
     url: $row.data('ajax-url'),
     type: "POST",
     data: JSON.stringify({
       'ucd_id': $row.data('ucd'),
-      'like': $siblings.filter('.like-btn').data('btn-on'),
-      'dislike': $siblings.filter('.dislike-btn').data('btn-on'),
-      'save': $siblings.filter('.save-btn').data('btn-on'),
-      // 'note':
+      'which_changed': which_changed
     }),
     success: function(data) {
       console.log(data);
@@ -65,4 +62,16 @@ function update_ucd(event, target) {
     }
   }
   )
+}
+
+function get_which_changed(target) {
+  if (target.hasClass('like-btn')) {
+    return "like";
+  }
+  if (target.hasClass('dislike-btn')) {
+    return "dislike";
+  }
+  if (target.hasClass('save-btn')) {
+    return "favorite";
+  }
 }
