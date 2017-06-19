@@ -15,7 +15,7 @@
 {% block content %}
 <div class="container">
   <div class="table-responsive">
-    <table id="my-ratings" class="table table-striped table-hover" data-toggle="table" data-search="true"> <!-- .table-condensed ?-->
+    <table id="combos-table" class="table table-striped table-hover" data-toggle="table" data-search="true"> <!-- .table-condensed ?-->
       <thead>
         <tr>
             <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Combination</th>
@@ -26,7 +26,7 @@
       </thead>
       <tbody>
         {% for user_combo_datum in user_combo_data %}
-          <tr>
+        <tr data-ucd="{{ user_combo_datum.id }}" data-cid="{{ user_combo_datum.combination.id }}" data-ajax-url="{% url 'ajax_update' %}"> 
             {% with ings=user_combo_datum.combination.ingredients.all %}
             <td data-numings='{{ ings.count }}'>
               {% for ing in ings %}
@@ -35,15 +35,15 @@
             </td>
             {% endwith %}
             <td>
-              <button type="button" class="table-btn" data-user-like="{{ user_combo_datum.like }}" aria-label="Like">
+              <button type="button" class="table-btn like-btn" data-btn-on="{{ user_combo_datum.like }}" aria-label="Like">
                 <span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>
               </button>
-              <button type="button" class="table-btn" data-user-dislike="{{ user_combo_datum.dislike }}" aria-label="Dislike">
+              <button type="button" class="table-btn dislike-btn" data-btn-on="{{ user_combo_datum.dislike }}" aria-label="Dislike">
                 <span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>
               </button>
             </td>
             <td>
-              <button type="button" class="table-btn" data-user-favorite="{{ user_combo_datum.favorite }}" aria-label="Star">
+              <button type="button" class="table-btn favorite-btn" data-btn-on="{{ user_combo_datum.favorite }}" aria-label="Star">
                 <span class="glyphicon glyphicon-star table-icon" aria-hidden="true"></span>
               </button>
             </td>
