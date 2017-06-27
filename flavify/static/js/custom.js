@@ -9,6 +9,17 @@ $(document).ready(function() {
     update_ucd(event, target);
   })
 
+  // $el is the anchor element
+  $('#combos-table').on('editable-save.bs.table', function(editable, field, row, oldValue, $el) {
+    console.log("editable:", editable);
+    console.log("field: ", field);
+    console.log("row: ", row);
+    console.log("el: ", $el);
+    console.log(row.notes);
+    console.log("\n\n\n");
+    update_ucd(editable, $el, row.notes);
+  })
+
   // csrf setup for ajax
   function getCookie(name) {
       var cookieValue = null;
@@ -40,21 +51,23 @@ $(document).ready(function() {
   });
 })
 
-function update_ucd(event, target) {
+function update_ucd(event, target, note = "") {
+  var which_changed = get_which_changed(target);
   var $row = target.closest('tr');
   var $siblings = $row.find('.table-btn');
-  var which_changed = get_which_changed(target);
   $.ajax({
     url: $row.data('ajax-url'),
     type: "POST",
     data: JSON.stringify({
       'ucd_id': $row.attr('data-ucd'),
       'combo_id': $row.attr('data-cid'),
-      'which_changed': which_changed
+      'which_changed': which_changed,
+      'note': note
     }),
     context: $row,
     success: function(data) {
       // this == context == $row
+      console.log(data);
       this.find('.like-btn').attr('data-btn-on', data.like);
       this.find('.dislike-btn').attr('data-btn-on', data.dislike);
       this.find('.favorite-btn').attr('data-btn-on', data.favorite);
@@ -78,5 +91,8 @@ function get_which_changed(target) {
   }
   if (target.hasClass('favorite-btn')) {
     return "favorite";
+  }
+  if (target.hasClass('editable')) {
+    return "note";
   }
 }
