@@ -9,14 +9,13 @@ $(document).ready(function() {
     update_ucd(event, target);
   })
 
-  // $el is the anchor element
   $('#combos-table').on('editable-save.bs.table', function(editable, field, row, oldValue, $el) {
-    console.log("editable:", editable);
-    console.log("field: ", field);
-    console.log("row: ", row);
-    console.log("el: ", $el);
-    console.log(row.notes);
-    console.log("\n\n\n");
+    // console.log("editable:", editable);
+    // console.log("field: ", field);
+    // console.log("row: ", row);
+    // console.log("el: ", $el);
+    // console.log(row.notes);
+    // console.log("\n\n\n");
     update_ucd(editable, $el, row.notes);
   })
 
@@ -67,11 +66,15 @@ function update_ucd(event, target, note = "") {
     context: $row,
     success: function(data) {
       // this == context == $row
-      console.log(data);
       this.find('.like-btn').attr('data-btn-on', data.like);
       this.find('.dislike-btn').attr('data-btn-on', data.dislike);
       this.find('.favorite-btn').attr('data-btn-on', data.favorite);
       this.attr('data-ucd', data.ucd_id);
+      var $note = this.find('a');
+      if ($note.hasClass('editable-unsaved')) {
+        $note.removeClass('editable-unsaved');
+        // $note.removeAttr('style');
+      }
     },
     error: function(xhr, status, error) {
       console.log("Status: " + status);

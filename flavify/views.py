@@ -44,17 +44,21 @@ def ajax_update_ucd(request):
         ucd_id = received_json_data['ucd_id']
         combo_id = received_json_data['combo_id']
         field_to_update = received_json_data['which_changed']
+        note = received_json_data['note']
+
         if ucd_id != "None":
             ucd = UserComboData.objects.get(pk=ucd_id)
-            original_val = getattr(ucd, field_to_update)  # Should be a boolean
-            setattr(ucd, field_to_update, not original_val)
+            if field_to_update == "note":
+                ucd.note = note
+            else:
+                original_val = getattr(ucd, field_to_update)  # Should be a boolean
+                setattr(ucd, field_to_update, not original_val)
 
-            # Can only like or dislike something
-            if not original_val:
-                if field_to_update == "like":
-                    ucd.dislike = False
-                elif field_to_update == "dislike":
-                    ucd.like = False
+                if not original_val:
+                    if field_to_update == "like":
+                        ucd.dislike = False
+                    elif field_to_update == "dislike":
+                        ucd.like = False
 
             if not (ucd.like or ucd.dislike or ucd.favorite) and ucd.note == "":
                 deleted_entry = ucd.delete()
@@ -63,12 +67,16 @@ def ajax_update_ucd(request):
         else:
             combo = Combination.objects.get(pk=combo_id)
             ucd = UserComboData(user=request.user, combination=combo)
-            setattr(ucd, field_to_update, True)
+            if field_to_update == "note":
+                ucd.note = note
+            else:
+                setattr(ucd, field_to_update, True)
             ucd.save()
 
         return JsonResponse({
             "like": str(ucd.like),
             "dislike": str(ucd.dislike),
             "favorite": str(ucd.favorite),
+            "note": str(ucd.note),
             "ucd_id": str(ucd.pk),
         })
