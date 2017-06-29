@@ -40,3 +40,6 @@ class IngredientSubmissionForm(forms.ModelForm):
         widgets = {  # TODO delete this
             'submittor': forms.HiddenInput()
         }
+
+# class SearchForm(forms.Form):
+#
