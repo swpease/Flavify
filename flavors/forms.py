@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from django_select2.forms import Select2MultipleWidget, HeavySelect2Widget
+from django_select2.forms import Select2MultipleWidget, ModelSelect2Widget
 
-from .models import Ingredient, Combination, IngredientSubmission
+from .models import Ingredient, Combination, IngredientSubmission, AltName
 
 
 def validate_count(ingredients):
@@ -42,5 +42,22 @@ class IngredientSubmissionForm(forms.ModelForm):
         }
 
 
+# class MyWidget(ModelSelect2Widget):
+#     search_fields = ['name__icontains', ]
+#     model = AltName
+#
+#
+# class SearchForm(forms.ModelForm):
+#     class Meta:
+#         model = AltName
+#         fields = ['name', ]
+#         widgets = {'name': MyWidget, }
+
+
 class SearchForm(forms.Form):
-    search = forms.CharField()
+    # search = forms.CharField()
+    # search = forms.ModelChoiceField(queryset=Ingredient.objects.all())
+    # name = forms.ModelMultipleChoiceField(widget=Select2MultipleWidget, queryset=Ingredient.objects.all())
+    name = forms.ModelChoiceField(widget=ModelSelect2Widget(model=AltName,
+                                                            search_fields=['name__icontains']),
+                                  queryset=AltName.objects.all())
