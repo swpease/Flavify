@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from django_select2.forms import Select2MultipleWidget
+from django_select2.forms import Select2MultipleWidget, HeavySelect2Widget
 
 from .models import Ingredient, Combination, IngredientSubmission
 
@@ -41,5 +41,6 @@ class IngredientSubmissionForm(forms.ModelForm):
             'submittor': forms.HiddenInput()
         }
 
-# class SearchForm(forms.Form):
-#
+
+class SearchForm(forms.Form):
+    search = forms.CharField()

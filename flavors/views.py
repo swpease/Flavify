@@ -1,6 +1,6 @@
 import requests
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -101,3 +101,7 @@ def pairings(request, ingredient):
 
     context = {'altName': alt_name, 'listing': listing, 'data_row': data_row}
     return render(request, 'flavors/ingredient.html', context)
+
+
+def search(request):
+    return redirect('flavors:pairings', ingredient=request.GET['search'])

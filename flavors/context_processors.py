@@ -1,4 +1,4 @@
-
+from .forms import SearchForm
 
 def search(request):
     """
@@ -7,5 +7,5 @@ def search(request):
     :param request: an HttpRequest
     :return: a dictionary representing context to be included by default with all rendered templates on the site.
     """
-    context = {"search": "what"}
+    context = {"searchForm": SearchForm()}
     return context

@@ -1,4 +1,7 @@
 {% load staticfiles %}
+
+{% load bootstrap3 %}
+
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -24,7 +27,10 @@
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
         <script src="{% static 'js/vendor/modernizr-2.8.3-respond-1.4.2.min.js' %}"></script>
-        {% block head_css %}{% endblock %}
+        {% block head_css %}
+        {{ form.media.css }}
+        <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+        {% endblock %}
         {% block head_js %}{% endblock %}
     </head>
     <body>
@@ -99,7 +105,15 @@
     <!-- The footer was originally at the bottom of the content block, without the div wrapper -->
     <div class="container">
       <footer>
-        <p>&copy; {{ search }}</p>
+        <form action="{% url 'flavors:search' %}" method="get">
+          {% bootstrap_form_errors searchForm %}
+          {% bootstrap_field searchForm.search show_label=False %}
+
+          <div class="form-group">
+             <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </form>
+        <p>&copy; 2017</p>
       </footer>
     </div>
 
@@ -121,6 +135,6 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X','auto');ga('send','pageview');
         </script>
-        {% block footer_js %}{% endblock %}
+        {% block footer_js %}{{ form.media.js }}{% endblock %}
     </body>
 </html>
