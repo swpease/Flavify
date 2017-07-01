@@ -55,9 +55,10 @@ class IngredientSubmissionForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    # search = forms.CharField()
-    # search = forms.ModelChoiceField(queryset=Ingredient.objects.all())
     # name = forms.ModelMultipleChoiceField(widget=Select2MultipleWidget, queryset=Ingredient.objects.all())
-    name = forms.ModelChoiceField(widget=ModelSelect2Widget(model=AltName,
-                                                            search_fields=['name__icontains']),
-                                  queryset=AltName.objects.all())
+    name = forms.ChoiceField(widget=ModelSelect2Widget(model=AltName,
+                                                       search_fields=['name__istartswith'],
+                                                       max_results=2))
+#TODO [30/Jun/2017 11:43:39] "GET /select2/fields/auto.json?term=s&field_id=NDM2OTgxOTg1Ng%3A1dR0la%3AEpeWWiZeNgHcZWg8ZFyxZvIIg5g HTTP/1.1" 404 1823
+#Not Found: /select2/fields/auto.json
+# when trying to search on an allauth page.

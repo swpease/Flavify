@@ -53,7 +53,7 @@ class AltName(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return '{}: Listed as {}'.format(self.name, self.ingredient)
+        return self.name
 
 
 class Taste(models.Model):

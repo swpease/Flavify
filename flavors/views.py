@@ -104,5 +104,5 @@ def pairings(request, ingredient):
 
 
 def search(request):
-    # might need to look up val by pk
-    return redirect('flavors:pairings', ingredient=request.GET['search'])
+    pk = request.GET['name']
+    return redirect('flavors:pairings', ingredient=AltName.objects.get(pk=pk))
