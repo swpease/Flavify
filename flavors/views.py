@@ -1,7 +1,7 @@
 import requests
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -84,23 +84,51 @@ def pairings(request, ingredient):
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
+    context = {'altName': alt_name, 'listing': listing}
+    return render(request, 'flavors/ingredient.html', context)
+
+
+@ensure_csrf_cookie
+def table(request, ingredient):
+    sort = request.GET.get('sort', 'ingredient')
+    order = request.GET.get('order', 'asc')
+    limit = int(request.GET.get('limit'))
+    offset = int(request.GET.get('offset'))
+
+    ingredient_spaced = ingredient.replace('-', ' ')
+    alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
+    listing = alt_name.ingredient
     combos = listing.combination_set.all()
-    data_row = []
+    # combos_subset =
+    data = {
+        'total': combos.count(),
+        'rows': []
+    }
     if request.user.is_authenticated:
         for combo in combos:
             ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
-                user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX. Do I need to put in user and combinatoin here?
-            data_row.append((ings_filtered, combo, user_combo_data))
-    else:
-        for combo in combos:
-            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
-            data_row.append((ings_filtered, combo))
+                user_combo_data = UserComboData()
+            data['rows'].append({
+                'ingredients': ings_filtered,
+                'ratings': combo.get_num_tried(),
+                'pctliked': combo.calc_percent_likes(),
+                'like': user_combo_data.like,  # and dislike!
+                'star': user_combo_data.favorite,
+                'notes': user_combo_data.note
+            })
 
-    context = {'altName': alt_name, 'listing': listing, 'data_row': data_row}
-    return render(request, 'flavors/ingredient.html', context)
+    else:
+        for combo in combos[:10]:
+            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            data['rows'].append({
+                'ingredient': "test",
+                # 'ratings': combo.get_num_tried(),
+                # 'pctliked': combo.calc_percent_likes()
+            })
+    return JsonResponse(data)
 
 
 def search(request):

@@ -50,6 +50,17 @@ $(document).ready(function() {
   });
 })
 
+function testFormatter(value, row, index) {
+  console.log(value);
+  console.log(row);
+  console.log(index);
+  var btn = '<button type="button" class="table-btn like-btn" data-btn-on="x" aria-label="Like">' +
+             '<span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>' +
+            '</button>'
+  return btn;
+}
+
+
 function update_ucd(event, target, note = "") {
   var which_changed = get_which_changed(target);
   var $row = target.closest('tr');

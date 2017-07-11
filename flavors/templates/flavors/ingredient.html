@@ -32,7 +32,10 @@
 
 {% if user.is_authenticated %}
   <div class="table-responsive">
-    <table id="combos-table" class="table table-striped table-hover" data-toggle="table" data-search="true" data-show-columns="true"> <!-- .table-condensed ?-->
+    <table id="combos-table" class="table table-striped table-hover"
+      data-toggle="table" data-search="true" data-show-columns="true"
+      data-pagination="true" data-side-pagination="server"
+      data-page-list="[2, 4, 8]" data-url="{% url 'flavors:table' altName.name %}"> <!-- .table-condensed ?-->
       <thead>
         <tr>
             <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
@@ -74,27 +77,21 @@
   </div>
 {% else %}
 <div class="table-responsive">
-  <table class="table table-striped table-hover" data-toggle="table" data-search="true" data-show-columns="true"> <!-- .table-condensed ?-->
+  <table class="table table-striped table-hover"
+    data-toggle="table" data-search="true" data-show-columns="true"
+    data-pagination="true" data-side-pagination="server"
+    data-page-list="[2, 4, 8]" data-url="{% url 'flavors:table' altName.name %}"> <!-- .table-condensed ?-->
     <thead>
       <tr>
-          <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Ingredients</th>
-          <th data-field="ratings" data-sortable="true">Ratings</th>
+          <th data-field="ingredient" data-sortable="true"
+            data-sort-name="_ingredients_data"
+            data-sorter="numIngsSorter"
+            data-formatter="testFormatter">Ingredients</th>
+<!--          <th data-field="ratings" data-sortable="true">Ratings</th>
           <th data-field="pctliked" data-sortable="true">% Liked</th>
+        -->
       </tr>
     </thead>
-    <tbody>
-      {% for ings, combo in data_row %}
-        <tr>
-          <td data-numings='{{ ings.count }}'>
-            {% for ing in ings %}
-              {{ ing }}
-            {% endfor %}
-          </td>
-          <td>{{combo.get_num_tried}}</td>
-          <td>{{combo.calc_percent_likes}}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
   </table>
 </div>
 {% endif %}

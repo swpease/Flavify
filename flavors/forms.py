@@ -42,18 +42,6 @@ class IngredientSubmissionForm(forms.ModelForm):
         }
 
 
-# class MyWidget(ModelSelect2Widget):
-#     search_fields = ['name__icontains', ]
-#     model = AltName
-#
-#
-# class SearchForm(forms.ModelForm):
-#     class Meta:
-#         model = AltName
-#         fields = ['name', ]
-#         widgets = {'name': MyWidget, }
-
-
 class SearchForm(forms.Form):
     # name = forms.CharField()
     # name = forms.ModelMultipleChoiceField(widget=Select2MultipleWidget, queryset=AltName.objects.all())
