@@ -51,13 +51,16 @@ $(document).ready(function() {
 })
 
 function testFormatter(value, row, index) {
-  console.log(value);
-  console.log(row);
+  console.log("value: " + value);
+  console.log("row: ", row);
   console.log(index);
-  var btn = '<button type="button" class="table-btn like-btn" data-btn-on="x" aria-label="Like">' +
-             '<span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>' +
-            '</button>'
-  return btn;
+  console.log(this);
+  // var content = '<span data-numings=' +  0 data-cid=0></span>
+  var btn = '<span>test this</span>'
+  // var btn = '<button type="button" class="table-btn like-btn" data-btn-on="x" aria-label="Like">' +
+  //            '<span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>' +
+  //           '</button>'
+  return value;
 }
 
 

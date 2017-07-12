@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.db.models import Count
 
 from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
@@ -98,10 +99,9 @@ def table(request, ingredient):
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
-    combos = listing.combination_set.all()
-    # combos_subset =
+    combos = Combination.objects.annotate(num_ings=Count('ingredients')).filter(ingredients=listing).order_by('num_ings')
     data = {
-        'total': combos.count(),
+        'total': combos.count() * 20,
         'rows': []
     }
     if request.user.is_authenticated:
@@ -121,12 +121,13 @@ def table(request, ingredient):
             })
 
     else:
-        for combo in combos[:10]:
+        for combo in combos[offset:(offset + limit)]:
             ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            ings_concat = ' '.join([str(i) for i in ings_filtered])
             data['rows'].append({
-                'ingredient': "test",
-                # 'ratings': combo.get_num_tried(),
-                # 'pctliked': combo.calc_percent_likes()
+                'ingredient': ings_concat,
+                'ratings': combo.get_num_tried(),
+                'pctliked': combo.calc_percent_likes()
             })
     return JsonResponse(data)
 
