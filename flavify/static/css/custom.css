@@ -15,14 +15,14 @@
   opacity: 1.0;
 }
 
-.favorite-btn[data-btn-on='True'] span {
+.favorite-btn[data-btn-on='true'] span {
   color: #dcdc0f;
 }
 
-.like-btn[data-btn-on='True'] span {
+.like-btn[data-btn-on='true'] span {
   color: #00ff00;
 }
 
-.dislike-btn[data-btn-on='True'] span {
+.dislike-btn[data-btn-on='true'] span {
   color: #ff0000;
 }

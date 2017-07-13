@@ -130,10 +130,12 @@ def table(request, ingredient):
             except ObjectDoesNotExist:
                 user_combo_data = UserComboData()
             data['rows'].append({
-                'ingredient': ings_filtered,
+                'ingredient': {'ingredients': ings_concat,
+                               'ucd': user_combo_data.id,
+                               'cid': combo.id},
                 'ratings': combo.get_num_tried(),
                 'pctliked': combo.calc_percent_likes(),
-                'like': user_combo_data.like,  # and dislike!
+                'like': {'like': user_combo_data.like, 'dislike': user_combo_data.dislike},
                 'star': user_combo_data.favorite,
                 'notes': user_combo_data.note
             })

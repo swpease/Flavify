@@ -50,17 +50,35 @@ $(document).ready(function() {
   });
 })
 
-function testFormatter(value, row, index) {
-  console.log("value: " + value);
-  console.log("row: ", row);
-  console.log(index);
-  console.log(this);
-  // var content = '<span data-numings=' +  0 data-cid=0></span>
-  var btn = '<span>test this</span>'
-  // var btn = '<button type="button" class="table-btn like-btn" data-btn-on="x" aria-label="Like">' +
-  //            '<span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>' +
-  //           '</button>'
-  return value;
+function ingredientsFormatter(value, row, index) {
+  // console.log(value);
+  var content = '<span data-ucd="' + value.ucd + '" data-cid="' + value.cid + '">' +
+                value.ingredients + '</span>'
+  // console.log(content);
+  return content;
+}
+
+function likeFormatter(value, row, index) {
+  var btn = '<button type="button" class="table-btn like-btn" data-btn-on="' + value.like + '" aria-label="Like">' +
+              '<span class="glyphicon glyphicon-thumbs-up table-icon" aria-hidden="true"></span>' +
+            '</button>' +
+            '<button type="button" class="table-btn dislike-btn" data-btn-on="' + value.dislike + '" aria-label="Dislike">' +
+              '<span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>' +
+            '</button>'
+  console.log(btn);
+  return btn;
+}
+
+function favoriteFormatter(value, row, index) {
+  // console.log("value: " + value);
+  // console.log("row: ", row);
+  // console.log(index);
+  // console.log(this);
+  var btn = '<button type="button" class="table-btn favorite-btn" data-btn-on="' + value + '" aria-label="Star">' +
+              '<span class="glyphicon glyphicon-star table-icon" aria-hidden="true"></span>' +
+            '</button>'
+  // console.log(btn);
+  return btn;
 }
 
 
