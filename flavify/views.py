@@ -46,7 +46,7 @@ def ajax_update_ucd(request):
         field_to_update = received_json_data['which_changed']
         note = received_json_data['note']
 
-        if ucd_id != "None":
+        if ucd_id != "null":
             ucd = UserComboData.objects.get(pk=ucd_id)
             if field_to_update == "note":
                 ucd.note = note
@@ -74,9 +74,9 @@ def ajax_update_ucd(request):
             ucd.save()
 
         return JsonResponse({
-            "like": str(ucd.like),
-            "dislike": str(ucd.dislike),
-            "favorite": str(ucd.favorite),
+            "like": ucd.like,
+            "dislike": ucd.dislike,
+            "favorite": ucd.favorite,
             "note": str(ucd.note),
             "ucd_id": str(ucd.pk),
         })

@@ -131,7 +131,7 @@ def table(request, ingredient):
                 user_combo_data = UserComboData()
             data['rows'].append({
                 'ingredient': {'ingredients': ings_concat,
-                               'ucd': user_combo_data.id,
+                               'ucd': user_combo_data.id,  # https://github.com/wenzhixin/bootstrap-table/issues/586
                                'cid': combo.id},
                 'ratings': combo.get_num_tried(),
                 'pctliked': combo.calc_percent_likes(),

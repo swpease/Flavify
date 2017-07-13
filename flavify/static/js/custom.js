@@ -52,7 +52,8 @@ $(document).ready(function() {
 
 function ingredientsFormatter(value, row, index) {
   // console.log(value);
-  var content = '<span data-ucd="' + value.ucd + '" data-cid="' + value.cid + '">' +
+  var content = '<span class="js-ingredients-entry" data-ucd="' + value.ucd +
+                '" data-cid="' + value.cid + '">' +
                 value.ingredients + '</span>'
   // console.log(content);
   return content;
@@ -65,7 +66,7 @@ function likeFormatter(value, row, index) {
             '<button type="button" class="table-btn dislike-btn" data-btn-on="' + value.dislike + '" aria-label="Dislike">' +
               '<span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>' +
             '</button>'
-  console.log(btn);
+  // console.log(btn);
   return btn;
 }
 
@@ -84,14 +85,15 @@ function favoriteFormatter(value, row, index) {
 
 function update_ucd(event, target, note = "") {
   var which_changed = get_which_changed(target);
+  var $table = $('#combos-table');
   var $row = target.closest('tr');
-  var $siblings = $row.find('.table-btn');
+  var $ingredients = $row.find('.js-ingredients-entry');
   $.ajax({
-    url: $row.data('ajax-url'),
+    url: $table.data('ajax-url'),
     type: "POST",
     data: JSON.stringify({
-      'ucd_id': $row.attr('data-ucd'),
-      'combo_id': $row.attr('data-cid'),
+      'ucd_id': $ingredients.attr('data-ucd'),
+      'combo_id': $ingredients.attr('data-cid'),
       'which_changed': which_changed,
       'note': note
     }),
@@ -101,7 +103,7 @@ function update_ucd(event, target, note = "") {
       this.find('.like-btn').attr('data-btn-on', data.like);
       this.find('.dislike-btn').attr('data-btn-on', data.dislike);
       this.find('.favorite-btn').attr('data-btn-on', data.favorite);
-      this.attr('data-ucd', data.ucd_id);
+      this.find('.js-ingredients-entry').attr('data-ucd', data.ucd_id);
       var $note = this.find('a');
       if ($note.hasClass('editable-unsaved')) {
         $note.removeClass('editable-unsaved');
@@ -113,8 +115,7 @@ function update_ucd(event, target, note = "") {
       console.log("Error: " + error);
       console.dir(xhr);
     }
-  }
-  )
+  })
 }
 
 function get_which_changed(target) {
