@@ -92,27 +92,45 @@ def pairings(request, ingredient):
 @ensure_csrf_cookie
 def table(request, ingredient):
     sort = request.GET.get('sort', 'ingredient')
-    order = request.GET.get('order', 'asc')
+    # sort = "num_ings" if sort_raw == "ingredient" else sort_raw
+    order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
 
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
-    combos = Combination.objects.annotate(num_ings=Count('ingredients')).filter(ingredients=listing).order_by('num_ings')
+    combos = Combination.objects.annotate(num_ings=Count('ingredients')).filter(ingredients=listing)
+
+    if sort == "ingredient":
+        order = "" if order_raw == "asc" else "-"
+        ordered_combos = combos.order_by(order + 'num_ings')
+    else:
+        order = False if order_raw == "asc" else True
+        combos_ing_sorted = combos.order_by('num_ings')
+        if sort == "ratings":
+            ordered_combos = sorted(combos_ing_sorted, key=lambda c: c.get_num_tried(), reverse=order)
+        elif sort == "pctliked":
+            ordered_combos = sorted(combos_ing_sorted, key=lambda c: c.calc_percent_likes(), reverse=order)
+        else:
+            raise ValueError
+
     data = {
-        'total': combos.count() * 20,
+        # May need to change this if I incorporate filtering.
+        'total': combos.count(),
         'rows': []
     }
+
     if request.user.is_authenticated:
-        for combo in combos:
+        for combo in ordered_combos[offset:(offset + limit)]:
             ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+            ings_concat = ' '.join([str(i) for i in ings_filtered])
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
                 user_combo_data = UserComboData()
             data['rows'].append({
-                'ingredients': ings_filtered,
+                'ingredient': ings_filtered,
                 'ratings': combo.get_num_tried(),
                 'pctliked': combo.calc_percent_likes(),
                 'like': user_combo_data.like,  # and dislike!
@@ -121,11 +139,12 @@ def table(request, ingredient):
             })
 
     else:
-        for combo in combos[offset:(offset + limit)]:
+        for combo in ordered_combos[offset:(offset + limit)]:
             ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
             ings_concat = ' '.join([str(i) for i in ings_filtered])
             data['rows'].append({
                 'ingredient': ings_concat,
+                #  Note: I am calculating these values twice now...
                 'ratings': combo.get_num_tried(),
                 'pctliked': combo.calc_percent_likes()
             })
