@@ -19,6 +19,13 @@ $(document).ready(function() {
     placeholder: "Pick your ingredients..."
   });
 
+  $('#ingredients-selector').on('change', function(e) {
+    console.log($(this).val());
+    var ids = $(this).val();
+    $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
+  });
+
+
   $('#combos-table').on('click', '.table-btn', function(event) {
     event.preventDefault();
     var target = $(this);
