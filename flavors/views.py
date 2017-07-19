@@ -92,15 +92,18 @@ def pairings(request, ingredient):
 @ensure_csrf_cookie
 def table(request, ingredient):
     sort = request.GET.get('sort', 'ingredient')
-    # sort = "num_ings" if sort_raw == "ingredient" else sort_raw
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
+    altname_ids_raw = request.GET.get('altnameids', '1')  # TODO... set a default value
+    altname_ids = altname_ids_raw.split(',')
 
-    ingredient_spaced = ingredient.replace('-', ' ')
-    alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
-    listing = alt_name.ingredient
-    combos = Combination.objects.annotate(num_ings=Count('ingredients')).filter(ingredients=listing)
+    ingredients = []
+    for altname_id in altname_ids:
+        ingredients.append(AltName.objects.get(id=altname_id).ingredient)
+    combos = Combination.objects.annotate(num_ings=Count('ingredients'))
+    for ing in ingredients:
+        combos = combos.filter(ingredients=ing)
 
     if sort == "ingredient":
         order = "" if order_raw == "asc" else "-"
@@ -123,8 +126,7 @@ def table(request, ingredient):
 
     if request.user.is_authenticated:
         for combo in ordered_combos[offset:(offset + limit)]:
-            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
-            ings_concat = ' '.join([str(i) for i in ings_filtered])
+            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
@@ -142,8 +144,7 @@ def table(request, ingredient):
 
     else:
         for combo in ordered_combos[offset:(offset + limit)]:
-            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
-            ings_concat = ' '.join([str(i) for i in ings_filtered])
+            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
             data['rows'].append({
                 'ingredient': ings_concat,
                 #  Note: I am calculating these values twice now...
