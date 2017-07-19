@@ -21,7 +21,7 @@ $(document).ready(function() {
 
   $('#ingredients-selector').on('change', function(e) {
     console.log($(this).val());
-    var ids = $(this).val();
+    var ids = $(this).val().join(',');
     $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
   });
 
