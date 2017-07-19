@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from flavors.models import UserComboData, Combination
+from flavors.models import UserComboData, Combination, AltName
 
 
 def home(request):
@@ -83,4 +83,8 @@ def ajax_update_ucd(request):
 
 
 def ajax_select2(request):
-    return JsonResponse({'x': "w"})
+    search = request.GET['q']
+    matches = AltName.objects.filter(name__icontains=search)[:10]  # Limiting results for no particular reason.
+    return JsonResponse({
+        "results": [{"id": ing.pk, "text": ing.name} for ing in matches]
+    })
