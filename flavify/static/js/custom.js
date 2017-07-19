@@ -3,6 +3,22 @@
 // I will just load it in base.html footer (which is where it currently is loaded)
 
 $(document).ready(function() {
+  $('#ingredients-selector').select2({
+    ajax: {
+      url: $('#ingredients-selector').data('ajax-select2'),
+      dataType: 'json',
+      delay: 250,
+      data: function (params) {
+              return {
+                q: params.term, // search term
+                page: params.page
+              };
+            }
+    },
+    minimumInputLength: 1,
+    placeholder: "Pick your ingredients..."
+  });
+
   $('#combos-table').on('click', '.table-btn', function(event) {
     event.preventDefault();
     var target = $(this);

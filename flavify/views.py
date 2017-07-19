@@ -80,3 +80,7 @@ def ajax_update_ucd(request):
             "note": str(ucd.note),
             "ucd_id": str(ucd.pk),
         })
+
+
+def ajax_select2(request):
+    return JsonResponse({'x': "w"})
