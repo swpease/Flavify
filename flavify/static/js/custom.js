@@ -20,8 +20,10 @@ $(document).ready(function() {
   });
 
   $('#ingredients-selector').on('change', function(e) {
-    console.log($(this).val());
+    // console.log($(this).val());
+    // console.log($(this));  // #ingredients-selector
     var ids = $(this).val().join(',');
+    $('#combos-table').bootstrapTable('selectPage', 1);
     $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
   });
 
@@ -72,6 +74,15 @@ $(document).ready(function() {
       }
   });
 })
+
+
+function queryParams(params) {
+  var ids = $('#ingredients-selector').val().join(',');
+  params.altnameids = ids;
+  // console.log(JSON.stringify(params));
+  return params;
+}
+
 
 function ingredientsFormatter(value, row, index) {
   // console.log(value);

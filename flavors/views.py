@@ -95,7 +95,9 @@ def table(request, ingredient):
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
-    altname_ids_raw = request.GET.get('altnameids', '1')  # TODO... set a default value
+    altname_ids_raw = request.GET.get('altnameids')  # TODO... set a default value
+    if altname_ids_raw == "":
+        altname_ids_raw = "1"
     altname_ids = altname_ids_raw.split(',')
 
     ingredients = []

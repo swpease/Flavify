@@ -51,7 +51,8 @@
       data-pagination="true" data-side-pagination="server"
       data-page-list="[2, 4, 8]"
       data-url="{% url 'flavors:table' altName.name %}"
-      data-ajax-url="{% url 'ajax_update' %}">
+      data-ajax-url="{% url 'ajax_update' %}"
+      data-query-params="queryParams">
       <thead>
         <tr>
             <th data-field="ingredient" data-sortable="true" data-filter-control="input" data-formatter="ingredientsFormatter">Ingredients</th>
