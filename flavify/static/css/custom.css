@@ -1,0 +1,28 @@
+ /*I suppose this might contain lots of stuff... right now
+ I'm just using it for button interactivity and such.*/
+
+.table-btn {
+  background: transparent;
+  border: none;
+}
+
+ .table-icon {
+   color: #727272;
+   opacity: 0.6;
+ }
+
+.table-btn:hover .table-icon {
+  opacity: 1.0;
+}
+
+.favorite-btn[data-btn-on='true'] span {
+  color: #dcdc0f;
+}
+
+.like-btn[data-btn-on='true'] span {
+  color: #00ff00;
+}
+
+.dislike-btn[data-btn-on='true'] span {
+  color: #ff0000;
+}

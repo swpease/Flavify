@@ -53,7 +53,7 @@ class AltName(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return '{}: Listed as {}'.format(self.name, self.ingredient)
+        return self.name
 
 
 class Taste(models.Model):
@@ -96,6 +96,7 @@ class Combination(models.Model):
     submittor = models.CharField(max_length=100, default="admin")
 
     # Might want to modify this if I am interested in likes/(likes + dislikes) vs likes/tries
+    # TODO... some people could have notes on stuff they haven't tried yet.
     def calc_percent_likes(self):
         """
         Percent likes taken to be likes/tries.

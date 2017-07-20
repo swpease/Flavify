@@ -1,9 +1,12 @@
 import requests
+from ast import literal_eval
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.db.models import Count
 
 from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
@@ -71,6 +74,7 @@ def submit_ingredient(request):
 
 
 # NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
+@ensure_csrf_cookie
 def pairings(request, ingredient):
     """
     Context objects:
@@ -82,20 +86,85 @@ def pairings(request, ingredient):
     ingredient_spaced = ingredient.replace('-', ' ')
     alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
     listing = alt_name.ingredient
-    combos = listing.combination_set.all()
-    data_row = []
+    context = {'altName': alt_name, 'listing': listing}
+    return render(request, 'flavors/ingredient.html', context)
+
+
+@ensure_csrf_cookie
+def table(request, ingredient):
+    sort = request.GET.get('sort', 'ingredient')
+    order_raw = request.GET.get('order', 'asc')
+    limit = int(request.GET.get('limit'))
+    offset = int(request.GET.get('offset'))
+    filters = literal_eval(request.GET.get('filter', '{}'))  # Converts to dictionary
+    altname_ids_raw = request.GET.get('altnameids')  # TODO... set a default value
+    if altname_ids_raw == "":
+        altname_ids_raw = "1"
+    altname_ids = altname_ids_raw.split(',')
+
+    ingredients = []
+    for altname_id in altname_ids:
+        ingredients.append(AltName.objects.get(id=altname_id).ingredient)
+    combos = Combination.objects.annotate(num_ings=Count('ingredients'))
+    for ing in ingredients:
+        combos = combos.filter(ingredients=ing)
+
+    if filters:
+        if filters.get('like'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__like=True)
+        if filters.get('star'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__favorite=True)
+        if filters.get('notes'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__note__icontains=filters['notes'])
+
+    if sort == "ingredient":
+        order = "" if order_raw == "asc" else "-"
+        ordered_combos = combos.order_by(order + 'num_ings')
+    else:
+        order = False if order_raw == "asc" else True
+        combos_ing_sorted = combos.order_by('num_ings')
+        if sort == "ratings":
+            ordered_combos = sorted(combos_ing_sorted, key=lambda c: c.get_num_tried(), reverse=order)
+        elif sort == "pctliked":
+            ordered_combos = sorted(combos_ing_sorted, key=lambda c: c.calc_percent_likes(), reverse=order)
+        else:
+            raise ValueError
+
+    data = {
+        'total': combos.count(),
+        'rows': []
+    }
+
     if request.user.is_authenticated:
-        for combo in combos:
-            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
+        for combo in ordered_combos[offset:(offset + limit)]:
+            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
-                user_combo_data = UserComboData()  # default instance; not saved TODO... be careful with AJAX. Do I need to put in user and combinatoin here?
-            data_row.append((ings_filtered, combo, user_combo_data))
-    else:
-        for combo in combos:
-            ings_filtered = combo.ingredients.exclude(listed_name__iexact=listing.listed_name)
-            data_row.append((ings_filtered, combo))
+                user_combo_data = UserComboData()
+            data['rows'].append({
+                'ingredient': {'ingredients': ings_concat,
+                               'ucd': user_combo_data.id,  # https://github.com/wenzhixin/bootstrap-table/issues/586
+                               'cid': combo.id},
+                'ratings': combo.get_num_tried(),
+                'pctliked': combo.calc_percent_likes(),
+                'like': {'like': user_combo_data.like, 'dislike': user_combo_data.dislike},
+                'star': user_combo_data.favorite,
+                'notes': user_combo_data.note
+            })
 
-    context = {'altName': alt_name, 'listing': listing, 'data_row': data_row}
-    return render(request, 'flavors/ingredient.html', context)
+    else:
+        for combo in ordered_combos[offset:(offset + limit)]:
+            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
+            data['rows'].append({
+                'ingredient': ings_concat,
+                #  Note: I am calculating these values twice now...
+                'ratings': combo.get_num_tried(),
+                'pctliked': combo.calc_percent_likes()
+            })
+    return JsonResponse(data)
+
+
+def search(request):
+    pk = request.GET['name']
+    return redirect('flavors:pairings', ingredient=AltName.objects.get(pk=pk))
