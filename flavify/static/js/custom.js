@@ -19,6 +19,9 @@ $(document).ready(function() {
     placeholder: "Pick your ingredients..."
   });
 
+  /* Refreshes table data and goes to first page of table upon
+     selecting ingredient.
+  */
   $('#ingredients-selector').on('change', function(e) {
     // console.log($(this).val());
     // console.log($(this));  // #ingredients-selector
@@ -27,16 +30,22 @@ $(document).ready(function() {
     // $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
   });
 
+  /* Goes to first page of table upon sorting. bootstrap-table event.
+  */
   $('#combos-table').on('sort.bs.table', function(e, name, order) {
     $('#combos-table').bootstrapTable('selectPage', 1);
   });
 
+  /* Saves user input when they click like or dislike or star.
+  */
   $('#combos-table').on('click', '.table-btn', function(event) {
     event.preventDefault();
     var target = $(this);
     update_ucd(event, target);
   })
 
+  /* Saves user input when they edit a note. bootstrap-table event.
+  */
   $('#combos-table').on('editable-save.bs.table', function(editable, field, row, oldValue, $el) {
     // console.log("editable:", editable);
     // console.log("field: ", field);
@@ -47,7 +56,7 @@ $(document).ready(function() {
     update_ucd(editable, $el, row.notes);
   })
 
-  // csrf setup for ajax
+  // csrf setup for ajax. From Django docs.
   function getCookie(name) {
       var cookieValue = null;
       if (document.cookie && document.cookie !== '') {
@@ -78,7 +87,8 @@ $(document).ready(function() {
   });
 })
 
-
+/* Adds the select2 ingredients list to the params passed for bootstrap-table population.
+*/
 function queryParams(params) {
   var ids = $('#ingredients-selector').val().join(',');
   params.altnameids = ids;
@@ -86,7 +96,7 @@ function queryParams(params) {
   return params;
 }
 
-
+// Formatters for bootstrap-table table cells.
 function ingredientsFormatter(value, row, index) {
   // console.log(value);
   var content = '<span class="js-ingredients-entry" data-ucd="' + value.ucd +
@@ -118,8 +128,10 @@ function favoriteFormatter(value, row, index) {
   // console.log(btn);
   return btn;
 }
+// End formatters
 
-
+/* Updates user's db data.
+*/
 function update_ucd(event, target, note = "") {
   var which_changed = get_which_changed(target);
   var $table = $('#combos-table');
@@ -155,6 +167,7 @@ function update_ucd(event, target, note = "") {
   })
 }
 
+// Helper fn for update_ucd.
 function get_which_changed(target) {
   if (target.hasClass('like-btn')) {
     return "like";
