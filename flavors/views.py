@@ -1,4 +1,5 @@
 import requests
+from ast import literal_eval
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -95,6 +96,7 @@ def table(request, ingredient):
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
+    filters = literal_eval(request.GET.get('filter', '{}'))  # Converts to dictionary
     altname_ids_raw = request.GET.get('altnameids')  # TODO... set a default value
     if altname_ids_raw == "":
         altname_ids_raw = "1"
@@ -106,6 +108,14 @@ def table(request, ingredient):
     combos = Combination.objects.annotate(num_ings=Count('ingredients'))
     for ing in ingredients:
         combos = combos.filter(ingredients=ing)
+
+    if filters:
+        if filters.get('like'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__like=True)
+        if filters.get('star'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__favorite=True)
+        if filters.get('notes'):
+            combos = combos.filter(usercombodata__user=request.user, usercombodata__note__icontains=filters['notes'])
 
     if sort == "ingredient":
         order = "" if order_raw == "asc" else "-"
@@ -121,7 +131,6 @@ def table(request, ingredient):
             raise ValueError
 
     data = {
-        # May need to change this if I incorporate filtering.
         'total': combos.count(),
         'rows': []
     }
