@@ -24,9 +24,12 @@ $(document).ready(function() {
     // console.log($(this));  // #ingredients-selector
     var ids = $(this).val().join(',');
     $('#combos-table').bootstrapTable('selectPage', 1);
-    $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
+    // $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
   });
 
+  $('#combos-table').on('sort.bs.table', function(e, name, order) {
+    $('#combos-table').bootstrapTable('selectPage', 1);
+  });
 
   $('#combos-table').on('click', '.table-btn', function(event) {
     event.preventDefault();
