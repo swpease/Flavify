@@ -4,7 +4,7 @@ from ast import literal_eval
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Count
 
@@ -47,8 +47,10 @@ def submit_combo(request):
                 return HttpResponseRedirect('/')
 
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/')
             # TODO... decide on redirects.
+        else:
+            raise ValidationError
 
     else:
         form = CombinationForm()
@@ -61,11 +63,16 @@ def submit_ingredient(request):
         if form.is_valid():
             result = recaptcha_validation(request)
             if result['success']:
-                form.save()
+                new_ingredient = form.save()
+                new_ingredient.submittor = request.user.username
+                new_ingredient.save(update_fields=['submittor'])
                 return HttpResponseRedirect('/')
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/')
             # TODO... decide on redirects.
+        else:
+            # TODO... https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/#the-save-method re: ValueError
+            raise ValidationError
 
     else:
         form = IngredientSubmissionForm()
@@ -164,7 +171,3 @@ def table(request):
             })
     return JsonResponse(data)
 
-
-def search(request):
-    pk = request.GET['name']
-    return redirect('flavors:pairings', ingredient=AltName.objects.get(pk=pk))

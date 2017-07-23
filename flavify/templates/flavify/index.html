@@ -50,7 +50,9 @@
       <thead>
         <!--https://github.com/wenzhixin/bootstrap-table/issues/2470-->
         <tr>
-            <th data-field="ingredient" data-sortable="true" data-formatter="ingredientsFormatter">Ingredients</th>
+            <th data-field="ingredient"
+              data-sortable="true"
+              data-formatter="ingredientsFormatter">Ingredients</th>
             <th data-field="ratings" data-sortable="true">Ratings</th>
             <th data-field="pctliked" data-sortable="true">% Liked</th>
             <th data-field="like" data-formatter="likeFormatter"
@@ -71,10 +73,14 @@
   </div>
 {% else %}
   <div class="table-responsive">
-    <table class="table table-striped table-hover"
-      data-toggle="table" data-search="true" data-show-columns="true"
-      data-pagination="true" data-side-pagination="server"
-      data-page-list="[2, 4, 8]" data-url="{% url 'flavors:table' %}"> <!-- .table-condensed ?-->
+    <table id="combos-table" class="table table-striped table-hover"
+      data-toggle="table"
+      data-show-columns="true"
+      data-pagination="true"
+      data-side-pagination="server"
+      data-page-list="[2, 4, 8]"
+      data-url="{% url 'flavors:table' %}"
+      data-query-params="queryParams">
       <thead>
         <tr>
             <th data-field="ingredient" data-sortable="true">Ingredients</th>

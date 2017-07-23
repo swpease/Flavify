@@ -36,11 +36,7 @@ class CombinationForm(forms.Form):
 class IngredientSubmissionForm(forms.ModelForm):
     class Meta:
         model = IngredientSubmission
-        fields = ['submission', 'submittor']
-        widgets = {  # TODO delete this
-            'submittor': forms.HiddenInput()
-        }
-
+        fields = ['submission']
 
 class SearchForm(forms.Form):
     # name = forms.CharField()
