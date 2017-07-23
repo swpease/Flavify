@@ -27,8 +27,10 @@ def recaptcha_validation(request):
     result = r.json()
     return result
 
+
 def index(request):
-    return HttpResponse("This is the index page for now.")
+    return HttpResponseRedirect('/')
+
 
 def submit_combo(request):
     if request.method == 'POST':
@@ -58,6 +60,12 @@ def submit_combo(request):
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
 def submit_ingredient(request):
+    """
+    Allows users to submit new ingredients to the db. I currently plan on just manually checking their submissions
+    for validity via the admin site.
+    :param request: Contains the form data submitted by the user for inclusion in the db.
+    :DB Modification: Adds a new IngredientSubmission entry into the db. Includes ingredient and submittor.
+    """
     if request.method == 'POST':
         form = IngredientSubmissionForm(request.POST)
         if form.is_valid():
@@ -80,24 +88,7 @@ def submit_ingredient(request):
     return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
 
-# NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
-@ensure_csrf_cookie
-def pairings(request, ingredient):
-    """
-    Context objects:
-      :altName: AltName object. The requested ingredient.
-      :listing: Ingredient object of the requested ingredient.
-      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of Combo, instance of associated UserComboData)
-               (b) no User: tuple of (list of QuerySets of Ingredients, instance of Combo)
-    """
-    ingredient_spaced = ingredient.replace('-', ' ')
-    alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
-    listing = alt_name.ingredient
-    context = {'altName': alt_name, 'listing': listing}
-    return render(request, 'flavors/ingredient.html', context)
-
-
-@ensure_csrf_cookie
+# @ensure_csrf_cookie
 def table(request):
     sort = request.GET.get('sort', 'ingredient')
     order_raw = request.GET.get('order', 'asc')

@@ -84,6 +84,9 @@ def ajax_update_ucd(request):
 
 
 def ajax_select2(request):
+    """
+    Populates the search results for the index page's navbar select2 widget.
+    """
     search = request.GET['q']
     matches = AltName.objects.filter(name__icontains=search)[:10]  # Limiting results for no particular reason.
     return JsonResponse({
