@@ -47,7 +47,7 @@ def submit_combo(request):
                 return HttpResponseRedirect('/')
 
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/ingredient/submit-combo')
             # TODO... decide on redirects.
 
     else:
@@ -64,7 +64,7 @@ def submit_ingredient(request):
                 form.save()
                 return HttpResponseRedirect('/')
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/ingredient/submit-ingredient')
             # TODO... decide on redirects.
 
     else:
@@ -73,23 +73,7 @@ def submit_ingredient(request):
     return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
 
-# NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
-@ensure_csrf_cookie
-def pairings(request, ingredient):
-    """
-    Context objects:
-      :altName: AltName object. The requested ingredient.
-      :listing: Ingredient object of the requested ingredient.
-      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of Combo, instance of associated UserComboData)
-               (b) no User: tuple of (list of QuerySets of Ingredients, instance of Combo)
-    """
-    ingredient_spaced = ingredient.replace('-', ' ')
-    alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
-    listing = alt_name.ingredient
-    context = {'altName': alt_name, 'listing': listing}
-    return render(request, 'flavors/ingredient.html', context)
-
-
+# TODO... don't need this csrf
 @ensure_csrf_cookie
 def table(request):
     sort = request.GET.get('sort', 'ingredient')
@@ -163,8 +147,3 @@ def table(request):
                 'pctliked': combo.calc_percent_likes()
             })
     return JsonResponse(data)
-
-
-def search(request):
-    pk = request.GET['name']
-    return redirect('flavors:pairings', ingredient=AltName.objects.get(pk=pk))

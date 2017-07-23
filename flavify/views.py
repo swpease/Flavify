@@ -84,6 +84,10 @@ def ajax_update_ucd(request):
 
 
 def ajax_select2(request):
+    """
+    For populating the navbar's select2 search bar (which is used to populate the main table's ingredients).
+    :return: List of up to ten matching results.
+    """
     search = request.GET['q']
     matches = AltName.objects.filter(name__icontains=search)[:10]  # Limiting results for no particular reason.
     return JsonResponse({
