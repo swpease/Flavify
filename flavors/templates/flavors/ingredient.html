@@ -10,6 +10,7 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
   <link rel="stylesheet" href="{% static 'css/bootstrap-table-filter-control.css' %}">
   <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 {% endblock %}
 
 {% block head_js %}
@@ -41,6 +42,10 @@
         <li>{{ taste.mouth_taste }}</li>
       {% endfor %}
   </ul>
+
+  <select id="ingredients-selector" class="js-filter-ingredients" name="doineedthis"
+    multiple="multiple" data-ajax-select2="{% url 'ajax_select2' %}" style="width: 50%;">
+  </select>
 
 {% if user.is_authenticated %}
   <div class="table-responsive">
