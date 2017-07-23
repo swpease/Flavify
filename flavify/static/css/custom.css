@@ -1,6 +1,12 @@
  /*I suppose this might contain lots of stuff... right now
  I'm just using it for button interactivity and such.*/
 
+#navbar .select2 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+
 .table-btn {
   background: transparent;
   border: none;

@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 
 from flavors.models import UserComboData, Combination, AltName

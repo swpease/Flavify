@@ -91,7 +91,7 @@ def pairings(request, ingredient):
 
 
 @ensure_csrf_cookie
-def table(request, ingredient):
+def table(request):
     sort = request.GET.get('sort', 'ingredient')
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
