@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% load bootstrap3 %}
+
+{% block head_title %}{{ listing.listed_name|lower|capfirst }}{% endblock %}
+
+{% block head_css %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+  <link rel="stylesheet" href="{% static 'flavors/css/allauth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="table-responsive">
+    <table id="my-submissions" class="table table-striped table-hover" data-toggle="table">
+      <thead>
+        <tr>
+            <th data-field="ingredients" data-sortable="true" data-sort-name="_ingredients_data" data-sorter="numIngsSorter">Combination</th>
+            <th data-field="ratings" data-sortable="true">Ratings</th>
+            <th data-field="pctliked" data-sortable="true">% Liked</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for combo in submitted_combos %}
+          <tr>
+            {% with ings=combo.ingredients.all %}
+            <td data-numings='{{ ings.count }}'>
+              {% for ing in ings %}
+                {{ ing }}
+              {% endfor %}
+            </td>
+            {% endwith %}
+            <td>{{combo.get_num_tried}}</td>
+            <td>{{combo.calc_percent_likes}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block footer_js %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+{% endblock %}
