@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ingredient, Taste, AltName, Combination, UserComboData, IngredientSubmission
+from .models import Ingredient, AltName, Combination, UserComboData, IngredientSubmission
 
 # Register your models here.
 class AltNameInline(admin.TabularInline):
@@ -12,7 +12,6 @@ class IngredientAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Taste)
 admin.site.register(Combination)
 admin.site.register(UserComboData)
 admin.site.register(IngredientSubmission)

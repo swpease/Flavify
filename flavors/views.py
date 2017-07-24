@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Count
 
-from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
+from .models import Ingredient, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
 
 

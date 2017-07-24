@@ -24,10 +24,7 @@ class Ingredient(models.Model):
                     Example 1: listed_name = "Morel mushroom", umbrella_cat = "Mushroom"
                     Example 2: listed_name = "Szechuan peppercorn", umbrella_cat = ""
     """
-    tastes = models.ManyToManyField('Taste', blank=True)  # Do I want to be able to list a relative magnitude somehow?
-
     listed_name = models.CharField(max_length=50, unique=True)  # Do I want this to be the PK?
-    umbrella_cat = models.CharField(max_length=30, blank=True)
 
     def save(self, *args, **kwargs):
         """Auto-creates the reflexive AltName object."""
@@ -54,28 +51,6 @@ class AltName(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Taste(models.Model):
-    """
-    RELATIONSHIPS: Ingredient – many-to-many, "backward"
-    mouth_taste: A collection of words that one can use to describe flavor.
-    """
-    TONGUE_MAP = (
-        ('sweet', 'sweet'),
-        ('salty', 'salty'),
-        ('sour', 'sour'),
-        ('bitter', 'bitter'),
-        ('umami', 'umami'),
-        ('spicy', 'spicy'),  # mustard
-        ('numbing', 'numbing'),  # Szechuan peppercorns
-        ('cooling', 'cooling'),  # mint
-    )
-
-    mouth_taste = models.CharField(max_length=20, choices=TONGUE_MAP)
-
-    def __str__(self):
-        return self.mouth_taste
 
 
 class Combination(models.Model):
@@ -130,7 +105,6 @@ class IngredientSubmission(models.Model):
                                   verbose_name='New Ingredient Submission',
                                   help_text='Submit a new ingredient to be able to pick for new flavor combinations.')
     datetime_submitted = models.DateTimeField(auto_now_add=True)
-    # TODO... get the username in the submission. Need a RequestContext.
     submittor = models.CharField(max_length=100)  # Do I want to set editable=False?
 
 
@@ -148,9 +122,3 @@ class UserComboData(models.Model):
     note = models.CharField(max_length=500, blank=True)
     # cooking_method = models.CharField(max_length=20, choices="TBD")
     # cuisine = models.CharField(max_length=50, choices="TBD")
-
-
-""" Do I have any use for one of these?
-class UserProfile(models.Model):
-    pass
-"""
