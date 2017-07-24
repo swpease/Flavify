@@ -88,21 +88,20 @@ def submit_ingredient(request):
     return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
 
-# @ensure_csrf_cookie
 def table(request):
     sort = request.GET.get('sort', 'ingredient')
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
     filters = literal_eval(request.GET.get('filter', '{}'))  # Converts to dictionary
-    altname_ids_raw = request.GET.get('altnameids')  # TODO... set a default value
-    if altname_ids_raw == "":
-        altname_ids_raw = "1"
+    altname_ids_raw = request.GET.get('altnameids')  # empty == ""
     altname_ids = altname_ids_raw.split(',')
 
     ingredients = []
-    for altname_id in altname_ids:
-        ingredients.append(AltName.objects.get(id=altname_id).ingredient)
+
+    if altname_ids != [""]:
+        for altname_id in altname_ids:
+            ingredients.append(AltName.objects.get(id=altname_id).ingredient)
     combos = Combination.objects.annotate(num_ings=Count('ingredients'))
     for ing in ingredients:
         combos = combos.filter(ingredients=ing)
