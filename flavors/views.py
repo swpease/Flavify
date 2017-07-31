@@ -51,11 +51,12 @@ def submit_combo(request):
                 # By default, the submittor is assumed to "like" the combination.
                 new_usercombodata = UserComboData(combination=new_combo, user=request.user, like=True)
                 new_usercombodata.save()
-                return HttpResponseRedirect(reverse('flavors:submit-combo'))
-
+                messages.success(request, 'Thank you for your submission!')
             else:
-                return HttpResponseRedirect('/')
-            # TODO... decide on redirects.
+                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+
+            return HttpResponseRedirect(reverse('flavors:submit-combo'))
+
     else:
         form = CombinationForm()
 
@@ -76,11 +77,12 @@ def submit_ingredient(request):
                 new_ingredient = form.save()
                 new_ingredient.submittor = request.user.username
                 new_ingredient.save(update_fields=['submittor'])
-
-                return HttpResponseRedirect('/')
+                messages.success(request, 'Thank you for your submission!')
             else:
-                return HttpResponseRedirect('/')
-            # TODO... decide on redirects.
+                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+
+            return HttpResponseRedirect(reverse('flavors:submit-ingredient'))
+
     else:
         form = IngredientSubmissionForm()
 

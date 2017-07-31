@@ -15,6 +15,7 @@
 {% endblock head_css %}
 
 {% block content %}
+{% include 'partials/messages.html' %}
 <div class="flavory-form-wrapper">
   <form action="{% url 'flavors:submit-combo' %}" method="post">
     <h3>New Combination</h3>
