@@ -7,6 +7,8 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Count
+from django.urls import reverse
+from django.contrib import messages
 
 from .models import Ingredient, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
@@ -31,6 +33,9 @@ def recaptcha_validation(request):
 def index(request):
     return HttpResponseRedirect('/')
 
+def thank_you(request):
+    return HttpResponse('cool')
+
 
 def submit_combo(request):
     if request.method == 'POST':
@@ -46,7 +51,7 @@ def submit_combo(request):
                 # By default, the submittor is assumed to "like" the combination.
                 new_usercombodata = UserComboData(combination=new_combo, user=request.user, like=True)
                 new_usercombodata.save()
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(reverse('flavors:submit-combo'))
 
             else:
                 return HttpResponseRedirect('/')
@@ -71,14 +76,11 @@ def submit_ingredient(request):
                 new_ingredient = form.save()
                 new_ingredient.submittor = request.user.username
                 new_ingredient.save(update_fields=['submittor'])
+
                 return HttpResponseRedirect('/')
             else:
                 return HttpResponseRedirect('/')
             # TODO... decide on redirects.
-        else:
-            # TODO... https://docs.djangoproject.com/en/1.11/topics/forms/modelforms/#the-save-method re: ValueError
-            raise ValidationError
-
     else:
         form = IngredientSubmissionForm()
 
