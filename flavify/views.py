@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 
 from flavors.models import UserComboData, Combination, AltName
@@ -17,17 +18,15 @@ def home_files(request, filename):
 
 
 @login_required
-def profile(request):
+def submissions(request):
     """
     The user's profile page. Currently just shows two tables:
       1. All combinations they have liked/disliked/favorited/noted
       2. All of their submitted combinations
     """
     # TODO... make AJAX responsive.
-    user_combo_data = UserComboData.objects.filter(user=request.user)
     submitted_combos = Combination.objects.filter(submittor=request.user)
-    return render(request, "flavify/profile.html", {"user_combo_data": user_combo_data,
-                                                "submitted_combos": submitted_combos})
+    return render(request, "flavify/submissions.html", {"submitted_combos": submitted_combos})
 
 
 def ajax_update_ucd(request):
@@ -83,6 +82,9 @@ def ajax_update_ucd(request):
 
 
 def ajax_select2(request):
+    """
+    Populates the search results for the index page's navbar select2 widget.
+    """
     search = request.GET['q']
     matches = AltName.objects.filter(name__icontains=search)[:10]  # Limiting results for no particular reason.
     return JsonResponse({

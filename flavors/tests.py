@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 
-from .models import Ingredient, AltName, Taste, Combination
+from .models import Ingredient, AltName, Combination
 from .forms import CombinationForm, validate_count
 
 

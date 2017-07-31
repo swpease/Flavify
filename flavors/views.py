@@ -4,11 +4,13 @@ from ast import literal_eval
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db.models import Count
+from django.urls import reverse
+from django.contrib import messages
 
-from .models import Ingredient, Taste, AltName, Combination, IngredientSubmission, UserComboData
+from .models import Ingredient, AltName, Combination, IngredientSubmission, UserComboData
 from .forms import CombinationForm, IngredientSubmissionForm
 
 
@@ -27,8 +29,13 @@ def recaptcha_validation(request):
     result = r.json()
     return result
 
+
 def index(request):
-    return HttpResponse("This is the index page for now.")
+    return HttpResponseRedirect('/')
+
+def thank_you(request):
+    return HttpResponse('cool')
+
 
 def submit_combo(request):
     if request.method == 'POST':
@@ -44,67 +51,56 @@ def submit_combo(request):
                 # By default, the submittor is assumed to "like" the combination.
                 new_usercombodata = UserComboData(combination=new_combo, user=request.user, like=True)
                 new_usercombodata.save()
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(reverse('flavors:submit-combo'))
 
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/')
             # TODO... decide on redirects.
-
     else:
         form = CombinationForm()
 
     return render(request, 'flavors/submit-combo.html', {'form': form})
 
 def submit_ingredient(request):
+    """
+    Allows users to submit new ingredients to the db. I currently plan on just manually checking their submissions
+    for validity via the admin site.
+    :param request: Contains the form data submitted by the user for inclusion in the db.
+    :DB Modification: Adds a new IngredientSubmission entry into the db. Includes ingredient and submittor.
+    """
     if request.method == 'POST':
         form = IngredientSubmissionForm(request.POST)
         if form.is_valid():
             result = recaptcha_validation(request)
             if result['success']:
-                form.save()
+                new_ingredient = form.save()
+                new_ingredient.submittor = request.user.username
+                new_ingredient.save(update_fields=['submittor'])
+
                 return HttpResponseRedirect('/')
             else:
-                return HttpResponseRedirect('/ingredient/hazelnut')
+                return HttpResponseRedirect('/')
             # TODO... decide on redirects.
-
     else:
         form = IngredientSubmissionForm()
 
     return render(request, 'flavors/submit-ingredient.html', {'form': form})
 
 
-# NOTE: I am uncertain if there is any performance difference between calling methods here vs in the template.
-@ensure_csrf_cookie
-def pairings(request, ingredient):
-    """
-    Context objects:
-      :altName: AltName object. The requested ingredient.
-      :listing: Ingredient object of the requested ingredient.
-      :combos: (a) if User: tuple of (list of QuerySets of Ingredients, instance of Combo, instance of associated UserComboData)
-               (b) no User: tuple of (list of QuerySets of Ingredients, instance of Combo)
-    """
-    ingredient_spaced = ingredient.replace('-', ' ')
-    alt_name = get_object_or_404(AltName, name__iexact=ingredient_spaced)
-    listing = alt_name.ingredient
-    context = {'altName': alt_name, 'listing': listing}
-    return render(request, 'flavors/ingredient.html', context)
-
-
-@ensure_csrf_cookie
-def table(request, ingredient):
+def table(request):
     sort = request.GET.get('sort', 'ingredient')
     order_raw = request.GET.get('order', 'asc')
     limit = int(request.GET.get('limit'))
     offset = int(request.GET.get('offset'))
     filters = literal_eval(request.GET.get('filter', '{}'))  # Converts to dictionary
-    altname_ids_raw = request.GET.get('altnameids')  # TODO... set a default value
-    if altname_ids_raw == "":
-        altname_ids_raw = "1"
+    altname_ids_raw = request.GET.get('altnameids')  # empty == ""
     altname_ids = altname_ids_raw.split(',')
 
     ingredients = []
-    for altname_id in altname_ids:
-        ingredients.append(AltName.objects.get(id=altname_id).ingredient)
+
+    if altname_ids != [""]:
+        for altname_id in altname_ids:
+            ingredients.append(AltName.objects.get(id=altname_id).ingredient)
     combos = Combination.objects.annotate(num_ings=Count('ingredients'))
     for ing in ingredients:
         combos = combos.filter(ingredients=ing)
@@ -164,7 +160,3 @@ def table(request, ingredient):
             })
     return JsonResponse(data)
 
-
-def search(request):
-    pk = request.GET['name']
-    return redirect('flavors:pairings', ingredient=AltName.objects.get(pk=pk))
