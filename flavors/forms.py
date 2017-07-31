@@ -15,11 +15,13 @@ def validate_count(ingredients):
 
 class CombinationForm(forms.Form):
     ingredients = forms.ModelMultipleChoiceField(queryset=Ingredient.objects.all(),
-                                                 widget=Select2MultipleWidget,  # TODO... see about kwargs to limit selections.
+                                                 widget=Select2MultipleWidget(attrs={
+                                                     'data-maximum-selection-length': 10
+                                                 }),
                                                  required=True,
                                                  to_field_name="listed_name",
                                                  label="New Combination",
-                                                 help_text="Select from two to ten ingredients that you think taste good together.",
+                                                 help_text="Select a combination that you like.",
                                                  validators=[validate_count])
 
     def clean_ingredients(self):

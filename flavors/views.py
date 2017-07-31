@@ -51,9 +51,6 @@ def submit_combo(request):
             else:
                 return HttpResponseRedirect('/')
             # TODO... decide on redirects.
-        else:
-            raise ValidationError
-
     else:
         form = CombinationForm()
 
