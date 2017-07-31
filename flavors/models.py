@@ -107,6 +107,9 @@ class IngredientSubmission(models.Model):
     datetime_submitted = models.DateTimeField(auto_now_add=True)
     submittor = models.CharField(max_length=100)  # Do I want to set editable=False?
 
+    def __str__(self):
+        return self.submission
+
 
 class UserComboData(models.Model):
     """
