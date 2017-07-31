@@ -33,10 +33,6 @@ def recaptcha_validation(request):
 def index(request):
     return HttpResponseRedirect('/')
 
-def thank_you(request):
-    return HttpResponse('cool')
-
-
 def submit_combo(request):
     if request.method == 'POST':
         form = CombinationForm(request.POST)
