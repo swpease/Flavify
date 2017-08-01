@@ -131,7 +131,7 @@ def table(request):
 
     if request.user.is_authenticated:
         for combo in ordered_combos[offset:(offset + limit)]:
-            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
+            ings_concat = ', '.join([str(i) for i in combo.ingredients.all()])
             try:
                 user_combo_data = UserComboData.objects.get(combination=combo, user=request.user)
             except ObjectDoesNotExist:
@@ -149,7 +149,7 @@ def table(request):
 
     else:
         for combo in ordered_combos[offset:(offset + limit)]:
-            ings_concat = ' '.join([str(i) for i in combo.ingredients.all()])
+            ings_concat = ', '.join([str(i) for i in combo.ingredients.all()])
             data['rows'].append({
                 'ingredient': ings_concat,
                 #  Note: I am calculating these values twice now...
