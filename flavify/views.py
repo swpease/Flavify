@@ -16,6 +16,9 @@ def home(request):
 def home_files(request, filename):
     return render(request, filename, {}, content_type='text/plain')
 
+def about(request):
+    return render(request, "flavify/about.html", {})
+
 
 @login_required
 def submissions(request):

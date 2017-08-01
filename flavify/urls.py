@@ -26,6 +26,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^(?P<filename>(robots.txt)|(humans.txt))$', views.home_files, name='home_files'),
+    url(r'^about/$', views.about, name='about'),
     url(r'^submissions/', views.submissions, name="submissions"),
     url(r'^ajax_update_ucd', views.ajax_update_ucd, name="ajax_update"),
     url(r'^ajax_select2', views.ajax_select2, name="ajax_select2"),
