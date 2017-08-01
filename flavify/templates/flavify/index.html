@@ -44,7 +44,7 @@
       data-filter-show-clear="true"
       data-pagination="true"
       data-side-pagination="server"
-      data-page-list="[2, 4, 8]"
+      data-page-list="[5, 10, 25, 50, 100]"
       data-url="{% url 'flavors:table' %}"
       data-ajax-url="{% url 'ajax_update' %}"
       data-query-params="queryParams">
@@ -67,6 +67,7 @@
               data-filter-control-placeholder="Filter notes..."
               data-editable="true"
               data-editable-type="textarea"
+              data-editable-emptytext="Note..."
               data-editable-mode="inline">Notes</th>
         </tr>
       </thead>
@@ -79,7 +80,7 @@
       data-show-columns="true"
       data-pagination="true"
       data-side-pagination="server"
-      data-page-list="[2, 4, 8]"
+      data-page-list="[5, 10, 25, 50, 100]"
       data-url="{% url 'flavors:table' %}"
       data-query-params="queryParams">
       <thead>
