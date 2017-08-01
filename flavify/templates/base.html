@@ -53,6 +53,10 @@
           {% block ingredientselector %}
           {% endblock ingredientselector %}
 
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'about' %}">About</a></li>
+          </ul>
+
           {% if user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">

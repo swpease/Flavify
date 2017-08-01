@@ -92,13 +92,13 @@ def ajax_select2(request):
     results = []
 
     perfect_match = AltName.objects.filter(name__iexact=search)
-    results.extend([{"id": ing.pk, "text": ing.name} for ing in perfect_match])
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in perfect_match])
 
     starting_match = AltName.objects.filter(name__istartswith=search)
-    results.extend([{"id": ing.pk, "text": ing.name} for ing in starting_match if {"id": ing.pk, "text": ing.name} not in results])
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in starting_match if {"id": ing.pk, "text": str(ing)} not in results])
 
     all_matches = AltName.objects.filter(name__icontains=search)
-    results.extend([{"id": ing.pk, "text": ing.name} for ing in all_matches if {"id": ing.pk, "text": ing.name} not in results])
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in all_matches if {"id": ing.pk, "text": str(ing)} not in results])
     return JsonResponse({
         "results": results[:25]
     })
