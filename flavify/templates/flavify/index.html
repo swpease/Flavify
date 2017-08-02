@@ -26,19 +26,16 @@
 {% endblock %}
 
 
-{% block ingredientselector %}
-<select id="ingredients-selector" class="js-filter-ingredients navbar-left navbar-form" name="doineedthis"
-  multiple="multiple" data-ajax-select2="{% url 'ajax_select2' %}" style="width: 50%;">
-</select>
-{% endblock ingredientselector %}
-
-
 {% block content %}
 <div class="container">
   <h1>Welcome to Flavory!</h1>
-  <p>Ready to expand your cooking horizons? Pick your ingredients (above) and
+  <p>Ready to expand your cooking horizons? Pick some ingredients and
   start seeing what other people have been trying out. Read our
-  <a href="#">about</a> section to learn more.</p>
+  <a href="{% url 'about' %}">about</a> section to learn more.</p>
+  <hr>
+  <select id="ingredients-selector" class="js-filter-ingredients" name="doineedthis"
+    multiple="multiple" data-ajax-select2="{% url 'ajax_select2' %}" style="width: 50%;">
+  </select>
 
   {% if user.is_authenticated %}
     <div class="table-responsive">

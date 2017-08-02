@@ -16,7 +16,7 @@ $(document).ready(function() {
             }
     },
     minimumInputLength: 1,
-    placeholder: "Pick your ingredients..."
+    placeholder: "Select ingredients..."
   });
 
   /* Refreshes table data and goes to first page of table upon
