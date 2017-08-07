@@ -110,12 +110,13 @@ LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
-# Ref: https://docs.djangoproject.com/en/1.11/topics/email/
-# TODO... setup email system
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # END allauth settings
 
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'postmaster@mg.flavoration.com'
+EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')
 
 WSGI_APPLICATION = 'flavify.wsgi.application'
 
