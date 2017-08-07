@@ -16,6 +16,9 @@ def home(request):
 def home_files(request, filename):
     return render(request, filename, {}, content_type='text/plain')
 
+def about(request):
+    return render(request, "flavify/about.html", {})
+
 
 @login_required
 def submissions(request):
@@ -86,7 +89,16 @@ def ajax_select2(request):
     Populates the search results for the index page's navbar select2 widget.
     """
     search = request.GET['q']
-    matches = AltName.objects.filter(name__icontains=search)[:10]  # Limiting results for no particular reason.
+    results = []
+
+    perfect_match = AltName.objects.filter(name__iexact=search)
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in perfect_match])
+
+    starting_match = AltName.objects.filter(name__istartswith=search)
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in starting_match if {"id": ing.pk, "text": str(ing)} not in results])
+
+    all_matches = AltName.objects.filter(name__icontains=search)
+    results.extend([{"id": ing.pk, "text": str(ing)} for ing in all_matches if {"id": ing.pk, "text": str(ing)} not in results])
     return JsonResponse({
-        "results": [{"id": ing.pk, "text": ing.name} for ing in matches]
+        "results": results[:25]
     })

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_title %}About{% endblock %}
+{% block head_css %}
+{% endblock head_css %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="page-header">Philosophy</h1>
+    <p>The point of Flavory is to expand your cooking horizons. There are no
+      recipes, no reviews, no public comments. Our main goals are:
+      <ul>
+        <li>Encouraging adventurousness in the kitchen.</li>
+        <li>Decreasing blind reliance on recipes.</li>
+        <li>Encouraging you to share your favorite flavor combinations with the world.</li>
+      </ul>
+    </p>
+
+    <p>A problem with recipe websites is that reviews tend to be unhelpful.
+      Do any of these sound familiar:
+      <ul>
+        <li>[Five star review] Can't wait to try this!!</li>
+        <li>It's okay... I didn't have any allspice, and I upped the cinnamon
+        by a tsp, and substituted fennel for clove, and dried apricots for
+        chocolate, and...</li>
+        <li>HOW DARE YOU PUT DAIRY IN BOLOGNESE!!!</li>
+      </ul>
+      With that in mind, we wanted to keep things simple: just a table of
+      combinations, and whether people like those combinations.
+    </p>
+
+    <h1 class="page-header">Use</h1>
+    <p>All you have to do is pick ingredients from the ingredients picker.
+      Some foods go by more than one name, like crawfish and crayfish, which
+      are noted in the picker with the name they appear as in the table.
+      For instance, "filbert (as hazelnut)" will appear as "hazelnut" in the table.
+    </p>
+    <p>If you <a href="/accounts/signup">sign up</a>, you'll be able to:
+      <ul>
+        <li>Like / dislike</li>
+        <li>Favorite</li>
+        <li>Write notes</li>
+        <li>Submit your favorite flavor combinations</li>
+      </ul>
+    </p>
+    <hr>
+  </div>
+{% endblock content %}
+
+{% block footer_js %}
+{% endblock footer_js %}

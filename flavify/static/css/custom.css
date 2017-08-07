@@ -1,6 +1,14 @@
  /*I suppose this might contain lots of stuff... right now
  I'm just using it for button interactivity and such.*/
 
+body {
+  background-color: #f9f9f9;
+}
+
+body > .container {
+  background-color: white;
+}
+
 #navbar .select2 {
   margin-top: 8px;
   margin-bottom: 8px;

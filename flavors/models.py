@@ -50,7 +50,10 @@ class AltName(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        if self.ingredient.listed_name == self.name:
+            return self.name
+        else:
+            return self.name + " (as " + self.ingredient.listed_name + ")"
 
 
 class Combination(models.Model):
@@ -106,6 +109,9 @@ class IngredientSubmission(models.Model):
                                   help_text='Submit a new ingredient to be able to pick for new flavor combinations.')
     datetime_submitted = models.DateTimeField(auto_now_add=True)
     submittor = models.CharField(max_length=100)  # Do I want to set editable=False?
+
+    def __str__(self):
+        return self.submission
 
 
 class UserComboData(models.Model):
