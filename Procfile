@@ -1,0 +1,1 @@
+web: gunicorn flavify.wsgi --log-file -
