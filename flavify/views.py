@@ -48,7 +48,7 @@ def ajax_update_ucd(request):
         field_to_update = received_json_data['which_changed']
         note = received_json_data['note']
 
-        if ucd_id != "null":
+        if ucd_id not in ["null", "None"]:
             ucd = UserComboData.objects.get(pk=ucd_id)
             if field_to_update == "note":
                 ucd.note = note

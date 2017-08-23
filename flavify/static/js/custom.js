@@ -1,7 +1,3 @@
-// NB: There is a file main.js that just houses the sort function for my
-// table as of now. This file will use jQuery, and if it is small,
-// I will just load it in base.html footer (which is where it currently is loaded)
-
 $(document).ready(function() {
   $('#ingredients-selector').select2({
     ajax: {
@@ -23,11 +19,7 @@ $(document).ready(function() {
      selecting ingredient.
   */
   $('#ingredients-selector').on('change', function(e) {
-    // console.log($(this).val());
-    // console.log($(this));  // #ingredients-selector
-    var ids = $(this).val().join(',');
     $('#combos-table').bootstrapTable('selectPage', 1);
-    // $('#combos-table').bootstrapTable('refresh', {query: {altnameids: ids}});
   });
 
   /* Goes to first page of table upon sorting. bootstrap-table event.
@@ -47,12 +39,6 @@ $(document).ready(function() {
   /* Saves user input when they edit a note. bootstrap-table event.
   */
   $('#combos-table').on('editable-save.bs.table', function(editable, field, row, oldValue, $el) {
-    // console.log("editable:", editable);
-    // console.log("field: ", field);
-    // console.log("row: ", row);
-    // console.log("el: ", $el);
-    // console.log(row.notes);
-    // console.log("\n\n\n");
     update_ucd(editable, $el, row.notes);
   })
 
@@ -92,17 +78,14 @@ $(document).ready(function() {
 function queryParams(params) {
   var ids = $('#ingredients-selector').val().join(',');
   params.altnameids = ids;
-  // console.log(JSON.stringify(params));
   return params;
 }
 
 // Formatters for bootstrap-table table cells.
 function ingredientsFormatter(value, row, index) {
-  // console.log(value);
   var content = '<span class="js-ingredients-entry" data-ucd="' + value.ucd +
                 '" data-cid="' + value.cid + '">' +
                 value.ingredients + '</span>'
-  // console.log(content);
   return content;
 }
 
@@ -113,19 +96,13 @@ function likeFormatter(value, row, index) {
             '<button type="button" class="table-btn dislike-btn" data-btn-on="' + value.dislike + '" aria-label="Dislike">' +
               '<span class="glyphicon glyphicon-thumbs-down table-icon" aria-hidden="true"></span>' +
             '</button>'
-  // console.log(btn);
   return btn;
 }
 
 function favoriteFormatter(value, row, index) {
-  // console.log("value: " + value);
-  // console.log("row: ", row);
-  // console.log(index);
-  // console.log(this);
   var btn = '<button type="button" class="table-btn favorite-btn" data-btn-on="' + value + '" aria-label="Star">' +
               '<span class="glyphicon glyphicon-star table-icon" aria-hidden="true"></span>' +
             '</button>'
-  // console.log(btn);
   return btn;
 }
 // End formatters
@@ -156,7 +133,6 @@ function update_ucd(event, target, note = "") {
       var $note = this.find('a');
       if ($note.hasClass('editable-unsaved')) {
         $note.removeClass('editable-unsaved');
-        // $note.removeAttr('style');
       }
     },
     error: function(xhr, status, error) {
